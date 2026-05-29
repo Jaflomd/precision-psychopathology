@@ -1433,7 +1433,7 @@ const SECTION_MAP = {
   'F3.drive':'Hedónico · Motivacional','F3.anticipación':'Hedónico · Motivacional','F3.tono':'Hedónico · Motivacional',
   'F4.experiencia':'Pensamiento','F4.contenido':'Pensamiento',
   'F6.amenaza':'Valencia negativa','F6.frustración':'Valencia negativa','F6.animo-meta':'Valencia negativa','F6.autoevaluación':'Valencia negativa','F6.desesperanza':'Valencia negativa',
-  'F7.testing':'Mentalización','F7.auto-mentalización':'Mentalización','F7.mentalización-otro':'Mentalización',
+  'F7.testing':'Mentalización','F7.coherencia-autobiografica':'Mentalización','F7.auto-mentalización':'Mentalización','F7.mentalización-otro':'Mentalización',
   'G.arousal':'Global','G.coherencia':'Global','G.sueno-ritmo':'Global','G.interocepcion':'Global',
   'META.enfermedad':'Neurocognitivo · Motor · Meta',
   'FUN.funcionalidad':'Neurocognitivo · Motor · Meta',
@@ -2226,7 +2226,7 @@ function renderProfile() {
     </div>
     <div class="profile-block">
       <h2>Perfil bMSE</h2>
-      <div class="h-sub">Radar bipolar de las 21 dimensiones clínicas bMSE agrupadas por dominio (Psicomotricidad, Atención, Hedónico, Pensamiento, Valencia Negativa, Mentalización, Global). Visualización del estado dimensional en un solo gráfico.</div>
+      <div class="h-sub">Radar bipolar de las dimensiones clínicas bMSE agrupadas por dominio (Psicomotricidad, Atención, Hedónico, Pensamiento, Valencia Negativa, Mentalización, Global). Visualización del estado dimensional en un solo gráfico.</div>
       <div id="radarBMSE" class="radar-container"></div>
     </div>
     <div class="profile-block">
@@ -2283,10 +2283,21 @@ function renderOutcomeCard(o) {
   </div>`;
 }
 
+function ensureHiTOPRuntimePatches() {
+  if (typeof HITOP_MAP === 'undefined') return;
+  const traumaSleep = HITOP_MAP['Sueño trauma/\ndesreg.'];
+  if (!Array.isArray(traumaSleep)) return;
+  const hasAutobiographicCoherence = traumaSleep.some(f => f.id === 'F7.coherencia-autobiografica');
+  if (!hasAutobiographicCoherence) {
+    traumaSleep.push({id:'F7.coherencia-autobiografica', inv:true, pole:'neg', w:0.75});
+  }
+}
+
 function renderHiTOPGrid() {
   if (typeof HITOP_MAP === 'undefined' || typeof HITOP_GROUPS === 'undefined') {
     return '<div style="color:var(--text-muted);font-size:12px">HiTOP data no disponible.</div>';
   }
+  ensureHiTOPRuntimePatches();
   const labels = Object.keys(HITOP_MAP);
   const ROW2_ORDER = ['Externalizing', 'Mania / Detachment', 'Thought Disorder', 'Sleep / Regulatory'];
   const row1 = HITOP_GROUPS.filter(g => !ROW2_ORDER.includes(g.name));
@@ -2327,7 +2338,7 @@ function renderHiTOPGrid() {
             else if (fd.signal) feederCls = 'signal';
           }
           const nivel = fd.evaluated ? (dimObj?.details?.[valTxt]?.nivel || dimObj?.scores?.[valTxt] || '') : '';
-          const tip = fd.evaluated ? `${d.id} ${valTxt} — ${nivel}` : fd.ne ? `${d.id}: no evaluable` : `${d.id}: no puntuado`;
+          const tip = fd.evaluated ? `${d.id} ${valTxt} — ${nivel}` : fd.ne ? `${d.id}: no evaluable` : fd.excluded ? `${d.id}: no aplica para este polo` : `${d.id}: no puntuado`;
           html += `<span class="hitop-feeder ${feederCls}" title="${escapeAttr(tip)}">${valTxt}`;
           if (nivel && nivel !== '—') html += `<span class="feeder-nivel">${shortLabel(nivel, 14)}</span>`;
           html += `</span>`;

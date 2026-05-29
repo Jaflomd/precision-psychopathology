@@ -656,7 +656,7 @@ const DIMS = [
     id:'F7.testing', code:'F7', title:'Testing de realidad', type:'bipolar',
     scores:{'-2':'Quiebre con consenso','-1':'Distorsiones leves','0':'Preservado','+1':'Sobre-monitoreo / duda perceptiva','+2':'Hipervigilancia / incompletitud'},
     details:{
-      '-2':{nivel:'Quiebre con consenso (JTC + externalizing bias)',loQueVes:'Certeza delirante, alucinaciones como reales, confabulación sin corrección. Beads task ≤2 draws.',loQueDice:'Contenido delirante con convicción total. O reporta percepciones que otros no comparten.',contra:'Alarma: quiebre psicótico. El clínico evalúa riesgo + contenido.',clasica:'AMDP: 33-52 (delirios, alucinaciones). ICD-11: MB26.0 (delusiones), MB27.2 (alucinaciones). SCIP: HAL1-9 (alucinaciones), DEL1-9 (delirios). Forbes: Delirios, Experiencias inusuales. Reischies: ch12 (alucinaciones), ch14 (delirios). Fish: Delirio, Delirio primario, Humor delirante, Percepción delirante, Alucinación, Confabulación. Vallejo: Delirio, Alucinación, Confabulación. Eguíluz: Alucinación, Alucinosis, Delirio.',circuito:'Salience network hiperactiva (ínsula anterior + ACC): señales internas reciben peso de señal externa. OFC: fallo reality filtering (Schnider, 210-330ms). vmPFC: fallo restricción confabulación. DA mesolímbica ↑↑ (saliencia aberrante, Kapur 2003). Glutamato: hipofunción NMDA cortical.',precision:'Jumping to conclusions (JTC): beads task ≤2 draws. Predictor de respuesta a CBTp (Garety 2015). AP atípicos primera línea. CBTp: target JTC + BADE. MCT (Moritz): evidencia nivel I para JTC.'},
+      '-2':{nivel:'Quiebre con consenso (JTC + externalizing bias)',loQueVes:'Certeza delirante, alucinaciones como reales, no corrige experiencias perceptivas o creencias frente a evidencia consensual inmediata. Beads task ≤2 draws.',loQueDice:'Contenido delirante con convicción total. O reporta percepciones que otros no comparten.',contra:'Alarma: quiebre psicótico. El clínico evalúa riesgo + contenido.',clasica:'AMDP: 33-52 (delirios, alucinaciones). ICD-11: MB26.0 (delusiones), MB27.2 (alucinaciones). SCIP: HAL1-9 (alucinaciones), DEL1-9 (delirios). Forbes: Delirios, Experiencias inusuales. Reischies: ch12 (alucinaciones), ch14 (delirios). Fish: Delirio, Delirio primario, Humor delirante, Percepción delirante, Alucinación. Vallejo: Delirio, Alucinación. Eguíluz: Alucinación, Alucinosis, Delirio.',circuito:'Salience network hiperactiva (ínsula anterior + ACC): señales internas reciben peso de señal externa. OFC: fallo reality filtering (Schnider, 210-330ms). DA mesolímbica ↑↑ (saliencia aberrante, Kapur 2003). Glutamato: hipofunción NMDA cortical.',precision:'Jumping to conclusions (JTC): beads task ≤2 draws. Predictor de respuesta a CBTp (Garety 2015). AP atípicos primera línea. CBTp: target JTC + BADE. MCT (Moritz): evidencia nivel I para JTC.'},
       '-1':{nivel:'Distorsiones leves (BADE + liberal acceptance)',loQueVes:'Ideas sobrevaloradas, ilusiones aceptadas, pseudoalucinaciones con insight parcial. Beads task 3-4.',loQueDice:'Reconoce parcialmente que puede estar equivocado. "Quizá me lo imagino, pero me parece real."',contra:'Incomodidad sutil: ¿es PLEs o pródromo?',clasica:'AMDP: 47 (ilusiones), ZP10 (ideas sobrevaloradas), 53-54 (desrealización/despersonalización). ICD-11: MB26.6, MB27.0-1 (dp/dr). Reischies: ch08 (alteración experiencia consciente), ch12 (ilusión), ch13 (despersonalización), ch14 (idea sobrevalorada). Fish: Pseudoalucinación, Ilusión, Idea sobrevalorada, Pareidolia. Vallejo: Ilusión, Idea sobrevalorada, Despersonalización.',circuito:'Salience network parcialmente disfuncional. mPFC anterior: reducción señal source monitoring. Default mode network hiperconectividad: propensión a fantasía. DA: desregulación parcial. 5-HT2A/DA desbalance.',precision:'Attenuated psychosis syndrome: monitoreo longitudinal. PLEs benignos (van Os) vs pródromo: distinguir por distress + decline funcional. BADE persistente = factor de riesgo de transición.'},
       '0':{nivel:'Preservado (calibración metacognitiva)',loQueVes:'Discrimina interno/externo, confianza proporcional, corrige errores. Beads task 5-8.',loQueDice:'',contra:'Entrevista cómoda.',clasica:'',circuito:'Salience network calibrada. OFC reality filtering funcional. Balance DMN ↔ task-positive network.',precision:''},
       '+1':{nivel:'Sobre-monitoreo / duda perceptiva (confianza metacognitiva ↓)',loQueVes:'Duda percepciones, necesita confirmación, checking ocasional. BORRTI Uncertainty of Perception elevado. Beads task 9-12.',loQueDice:'"¿Eso realmente pasó?" "Necesito verificar." "No estoy seguro de lo que vi/oí."',contra:'Paciencia requerida: el paciente necesita confirmación repetida.',clasica:'AMDP: 27 (suspicacia), 30-31 (obsesiones-compulsiones checking). ICD-11: MB26.9 (suspicacia), MB25.0-1 (obsesiones). HiTOP: Mistrust, Doubt. SCIP: OCD3 (compulsiones verificación). Fish: Obsesión, Compulsión. Reischies: ch11 (suspicacia), ch10 (compulsiones verificación).',circuito:'Loop CSTC hiperactivado en verificación. DLPFC: sobre-monitoreo de errores. ACC: señal de error persistente ("algo no está bien"). 5-HT: desbalance CSTC (base ISRS).',precision:'TOC checking: ISRS + ERP. Suspicacia epistémica sin psicosis: psicoterapia MBT/TFP. YBOCS checking ≥8 = clínicamente significativo.'},
@@ -667,11 +667,39 @@ const DIMS = [
       rows:[
         ['AMDP 9e','33-52 (delirios, alucinaciones)','47 (ilusiones), ZP10 (sobrevaloradas)','—','27 (suspicacia), 30-31 (checking)','30-31 (just-right)'],
         ['ICD-11','MB26.0 (delusiones), MB27.2 (alucinaciones)','MB26.6, MB27.0-1 (dp/dr)','—','MB26.9, MB25.0-1 (obsesiones)','MB26.7-8, MB25 (severo)'],
-        ['Fish (2019)','Delirio, Alucinación, Confabulación','Pseudoalucinación, Ilusión, Idea sobrevalorada','—','Obsesión, Compulsión','Obsesión severa'],
+        ['Fish (2019)','Delirio, Alucinación','Pseudoalucinación, Ilusión, Idea sobrevalorada','—','Obsesión, Compulsión','Obsesión severa'],
         ['HiTOP','Distorsión realidad, Delirios, Alucinaciones','Excentricidad, Fantasía','—','Mistrust, Doubt','Suspicacia, Perfeccionismo patológico']
       ]
     },
     guide:['¿Ha tenido experiencias que otros no comparten?','¿Escucha o ve cosas que otros no?','¿Siente que necesita verificar las cosas repetidamente?','¿Siente que algo no está bien pero no puede identificar qué?']
+  },
+  {
+    id:'F7.coherencia-autobiografica', code:'F7', title:'Coherencia autobiográfica', type:'bipolar',
+    scores:{'-2':'Fragmentación / reliving','-1':'Narrativa fragmentada','0':'Narrativa integrada','+1':'Relleno / sobreinferencia','+2':'Confabulación autobiográfica'},
+    details:{
+      '-2':{nivel:'Fragmentación / reliving',loQueVes:'Memoria autobiográfica descontextualizada: flashbacks, intrusiones vívidas, lagunas disociativas o fragmentos sensoriales/afectivos sin marco temporal. El pasado se impone como presente.',loQueDice:'"Sé que pasó, pero lo vivo como si estuviera pasando ahora." "Me vienen escenas/sensaciones y pierdo el aquí." "Hay partes que no puedo ordenar."',contra:'El clínico siente urgencia de anclar al presente. Riesgo de confundir memoria real traumática con quiebre psicótico si no se pregunta por temporalidad.',clasica:'DSM-5: PTSD criterio B (intrusiones, flashbacks), subtipo disociativo. ICD-11: PTSD/CPTSD re-experiencing in the present. Fish: estados disociativos, déjà vécu patológico. No equivale a confabulación.',circuito:'Hipocampo-vmPFC hipoancla contexto temporal; amígdala/salience hiperetiqueta fragmentos como actuales; DMN autobiográfica se desorganiza; LC-NE aumenta presentness y ganancia sensorial.',precision:'Evaluar presentness, disparadores, modalidad, orientación durante el episodio y recuperación. Intervenciones: grounding, estabilización, trauma-focused CBT/EMDR cuando haya ventana de tolerancia.'},
+      '-1':{nivel:'Narrativa parcialmente fragmentada',loQueVes:'Recuerdos intrusivos, lagunas o secuencias autobiográficas incompletas, pero conserva orientación temporal y puede reconstruir con apoyo.',loQueDice:'"Me vienen recuerdos, pero sé que son recuerdos." "Hay huecos, pero puedo ordenar la historia si voy despacio."',contra:'Necesidad de ayudar a ordenar sin sugerir contenido.',clasica:'PTSD/CPTSD re-experiencing leve, amnesia disociativa parcial, intrusiones traumáticas con insight temporal preservado.',circuito:'Hipocampo-vmPFC parcialmente desacoplado; salience elevada pero modulable; DMN autobiográfica conserva integración parcial.',precision:'Registrar modalidad, frecuencia, interferencia y grado de recuperación tras anclaje.'},
+      '0':{nivel:'Narrativa autobiográfica integrada',loQueVes:'Relato autobiográfico temporalmente ordenado, flexible, con distinción pasado-presente-imaginado y corrección ante dudas.',loQueDice:'Ubica recuerdos como recuerdos, reconoce incertidumbre y puede diferenciar hecho, interpretación e imaginación.',contra:'Entrevista organizada.',clasica:'',circuito:'Hipocampo-vmPFC contextualiza episodios; DMN autobiográfica integrada; CEN permite monitoreo narrativo.',precision:''},
+      '+1':{nivel:'Relleno / sobreinferencia',loQueVes:'Llena huecos con inferencias plausibles, detalles dudosos o mezcla de fuentes. Corrige si se le muestra evidencia o si reconoce incertidumbre.',loQueDice:'"Creo que fue así." "Ahora que lo dice, puede que lo esté mezclando." "Lo estoy deduciendo."',contra:'Cuidado con preguntas sugestivas: la narrativa puede cristalizarse si se refuerza.',clasica:'Falso reconocimiento leve, source-memory error, intrusiones mnésicas no delirantes. Diferenciar de mentira consciente.',circuito:'Hipocampo-vmPFC con source monitoring débil; CEN compensa parcialmente; DMN completa huecos narrativos.',precision:'Pedir grado de certeza, fuente del dato e informante. Ver NC.recall si hay déficit episódico.'},
+      '+2':{nivel:'Confabulación autobiográfica',loQueVes:'Relato falso o mal ensamblado sostenido sin intención de engaño, con pobre corrección. Puede rellenar lagunas, mezclar tiempos/personas o construir una continuidad autobiográfica ficticia.',loQueDice:'Narra detalles con certeza pese a contradicción objetiva o informantes. No reconoce el relleno como inferencia.',contra:'El clínico puede sentirse "persuadido" por la coherencia superficial. Requiere contraste cuidadoso con datos externos.',clasica:'Fish/Vallejo: confabulación. Síndrome amnésico, daño orbitofrontal/vmPFC, Korsakoff, TCE, demencias, delirium en recuperación. No es mentira ni delirio primario por sí mismo.',circuito:'Hipocampo-PFC: source memory y anclaje episódico fallan; vmPFC/OFC no inhibe memorias o inferencias irrelevantes; DMN sobreconstruye continuidad narrativa; CEN monitorea débilmente.',precision:'Contrastar con informante/registro, evaluar NC.recall, funciones ejecutivas y fluctuación. Si es aguda o nueva: considerar etiología neurológica, tóxica, metabólica o delirium.'}
+    },
+    frameworks:{
+      headers:['','−2','−1','0','+1','+2'],
+      rows:[
+        ['AMDP / Fish','Estados disociativos, déjà vécu patológico','Lagunas / intrusiones con insight','—','Falso reconocimiento, mezcla de fuentes','Confabulación'],
+        ['ICD-11','PTSD/CPTSD re-experiencing in the present, amnesia disociativa','Intrusiones traumáticas parciales','—','Errores de memoria / source monitoring','Síndrome amnésico, delirium/NCD si aplica'],
+        ['DSM-5','PTSD B3/B4, subtipo disociativo','PTSD intrusiones con insight','—','Falso reconocimiento / memoria sugestible','Neurocognitive disorder, delirium, amnestic disorder si aplica'],
+        ['RDoC','Declarative Memory + Self Knowledge desintegrados','Declarative Memory vulnerable','—','Source memory débil','Declarative Memory + Cognitive Control alterados'],
+        ['HiTOP','Experiencias disociativas / trauma intrusivo','Experiencias disociativas leves','—','Cognición/memoria autobiográfica alterada','Thought disorder / memoria autobiográfica alterada']
+      ]
+    },
+    guide:['¿Lo que aparece se siente como recuerdo, imagen, sensación corporal o escena presente?','Cuando ocurre, ¿sabe que está en el presente o lo vive como ahora?','¿Hay huecos de memoria o partes que otros recuerdan distinto?','¿Qué tan seguro está de los detalles? ¿De dónde viene cada dato?','¿Cambia con grounding, orientación o evidencia externa?'],
+    specifiers:[
+      {id:'auto_mem_tipo',type:'radio',label:'Fenómeno principal',options:['[reliving] Flashback','[intrusion] Recuerdo intrusivo','[laguna] Laguna/amnesia','[relleno] Relleno inferencial','[confab] Confabulación'],showWhen:'!=0'},
+      {id:'auto_mem_modalidad',type:'radio',label:'Modalidad dominante',options:['Visual','Auditiva','Somática','Emocional','Narrativa','Multimodal'],showWhen:'!=0'},
+      {id:'auto_mem_presentness',type:'radio',label:'Presentness',options:['Sabe que es pasado','Oscila pasado-presente','Lo vive como ahora','No ubicable'],showWhen:'<0'},
+      {id:'auto_mem_source',type:'radio',label:'Fuente / verificación',options:['Paciente','Informante','Registro','Mixta','No verificable'],showWhen:'!=0'}
+    ]
   },
   {
     id:'F7.auto-mentalización', code:'F7', title:'Auto-mentalización', type:'bipolar',
@@ -1084,7 +1112,7 @@ const DIM_ORDER = [
   'F3.drive','F3.anticipación','F3.tono',
   'F4.experiencia','F4.contenido',
   'F6.amenaza','F6.frustración','F6.animo-meta','F6.autoevaluación','F6.desesperanza',
-  'F7.testing','F7.auto-mentalización','F7.mentalización-otro',
+  'F7.testing','F7.coherencia-autobiografica','F7.auto-mentalización','F7.mentalización-otro',
   'G.arousal','G.coherencia','G.sueno-ritmo','G.interocepcion',
   'META.enfermedad',
   'FUN.funcionalidad',
@@ -1099,20 +1127,20 @@ const HITOP_MAP = {
   'Miedo': [{id:'F6.amenaza'}],
   'Malestar': [{id:'F6.animo-meta',inv:true,w:1.2},{id:'F6.desesperanza',inv:true},{id:'F6.autoevaluación',inv:true},{id:'F3.tono',inv:true},{id:'FUN.psp_disruptivas',inv:true,w:0.6}],
   'Aislamiento\nSocial': [{id:'F1.expresividad',inv:true},{id:'F7.mentalización-otro',inv:true},{id:'FUN.psp_relaciones',inv:true,w:0.9}],
-  'Sueño trauma/\ndesreg.': [{id:'G.sueno-ritmo',abs:true},{id:'G.arousal',abs:true,w:0.5},{id:'F6.amenaza',w:0.5}],
+  'Sueño trauma/\ndesreg.': [{id:'G.sueno-ritmo',abs:true},{id:'G.arousal',abs:true,w:0.5},{id:'F6.amenaza',w:0.5},{id:'F7.coherencia-autobiografica',inv:true,pole:'neg',w:0.75}],
   'Patología\nAlimentaria': [{id:'F3.tono',spec:'target',specIn:['Restricción','Purga','Ejercicio excesivo']},{id:'FUN.psp_autocuidado',w:0.5}],
   // Disfunción emocional > Somatomorfo
   'Síntomas\nSomáticos': [{id:'G.interocepcion'}],
   'Sueño\nSomático': [{id:'G.sueno-ritmo',abs:true}],
   // Disfunción emocional > Trastorno del pensamiento
   'Psicosis\nPositiva': [{id:'F7.testing',inv:true},{id:'F4.contenido'}],
-  'Experiencias\nDisociativas': [{id:'F7.auto-mentalización',inv:true},{id:'NC.conciencia',abs:true,w:0.5}],
+  'Experiencias\nDisociativas': [{id:'F7.auto-mentalización',inv:true},{id:'F7.coherencia-autobiografica',inv:true,pole:'neg',w:1.2},{id:'NC.conciencia',abs:true,w:0.5}],
   'Sínt. físicos\nincontrolables': [{id:'F2.sensorial'},{id:'NM.tic',abs:true,w:0.5},{id:'NM.estereotipia',abs:true,w:0.5},{id:'NM.distonia',abs:true,w:0.5},{id:'NM.tremor',abs:true,w:0.5}],
   // Dificultades neurodevelopmentales y cognitivas
   'Sensación alt.\n+ Atención': [{id:'F5.regulación',abs:true},{id:'F2.sensorial',abs:true,w:0.75}],
   'Comportamiento\nRitualizado': [{id:'F7.testing'},{id:'F5.regulación'},{id:'G.coherencia',w:0.5},{id:'FUN.psp_autocuidado',w:0.9}],
   'Comunicación\nSocial': [{id:'F1.expresividad',inv:true},{id:'F7.mentalización-otro',inv:true},{id:'G.coherencia',inv:true,w:0.5}],
-  'Cognición\nBedside': [{id:'NC.fluencia',abs:true},{id:'NC.digit',abs:true},{id:'NC.tmt',abs:true},{id:'NC.clock',abs:true},{id:'NC.recall',abs:true}],
+  'Cognición\nBedside': [{id:'NC.fluencia',abs:true},{id:'NC.digit',abs:true},{id:'NC.tmt',abs:true},{id:'NC.clock',abs:true},{id:'NC.recall',abs:true},{id:'F7.coherencia-autobiografica',pole:'pos',w:0.75}],
   // Externalizante, manía y desapego > Externalizante
   'Afecto Neg.\nExternalizado': [{id:'F6.frustración'}],
   'Desinhibición': [{id:'F3.drive'},{id:'F6.amenaza',inv:true,w:0.75},{id:'F2.velocidad',w:0.5},{id:'FUN.psp_utiles',w:0.5}],
@@ -1275,6 +1303,7 @@ const BMSE_MAP = {
   'Auto-\nevaluación': [{id:'F6.autoevaluación'}],
   'Visión\nProspectiva': [{id:'F6.desesperanza'}],
   'Testing de\nRealidad': [{id:'F7.testing'}],
+  'Coherencia\nAutobiográfica': [{id:'F7.coherencia-autobiografica'}],
   'Auto-\nMentalización': [{id:'F7.auto-mentalización'}],
   'Mentalización\ndel Otro': [{id:'F7.mentalización-otro'}],
   'Arousal': [{id:'G.arousal'}],
@@ -1290,8 +1319,8 @@ const BMSE_GROUPS = [
   {name:'Hedónico',from:3,to:5,color:'#e8590c'},
   {name:'Pensamiento',from:6,to:7,color:'#7c3aed'},
   {name:'Valencia Negativa',from:8,to:12,color:'#c92a2a'},
-  {name:'Mentalización',from:13,to:15,color:'#0c8599'},
-  {name:'Global',from:16,to:20,color:'#57534e'}
+  {name:'Mentalización',from:13,to:16,color:'#0c8599'},
+  {name:'Global',from:17,to:21,color:'#57534e'}
 ];
 const RDOC_MAP = {
   // ── Negative Valence Systems ──
@@ -1310,13 +1339,13 @@ const RDOC_MAP = {
   'Attention': [{id:'F5.regulación'}],
   'Perception': [{id:'F2.sensorial'}],
   'Language /\nFluency': [{id:'NC.fluencia'}],
-  'Declarative\nMemory': [{id:'NC.recall'}],
+  'Declarative\nMemory': [{id:'NC.recall'},{id:'F7.coherencia-autobiografica',abs:true,w:0.75}],
   'Working\nMemory': [{id:'NC.digit'}],
-  'Cognitive\nControl': [{id:'F5.regulación'},{id:'NC.tmt'}],
+  'Cognitive\nControl': [{id:'F5.regulación'},{id:'NC.tmt'},{id:'F7.coherencia-autobiografica',pole:'pos',w:0.5}],
   // ── Social Processes ──
   'Affiliation\n& Attachment': [{id:'P2.afiliación'},{id:'F1.expresividad'},{id:'FUN.psp_relaciones',abs:true,w:0.75}],
   'Social\nCommunication': [{id:'F1.expresividad'}],
-  'Self\nKnowledge': [{id:'F7.auto-mentalización'}],
+  'Self\nKnowledge': [{id:'F7.auto-mentalización'},{id:'F7.coherencia-autobiografica',pole:'neg',inv:true,w:0.75}],
   'Other\nUnderstanding': [{id:'F7.mentalización-otro'}],
   // ── Arousal / Regulatory Systems ──
   'Arousal': [{id:'G.arousal'}],
@@ -1325,7 +1354,7 @@ const RDOC_MAP = {
   'Interoceptive\nSensory': [{id:'G.interocepcion'}],
   // ── Sensorimotor Systems ──
   'Motor\nAction': [{id:'F2.velocidad'},{id:'NM.luria'},{id:'NM.alternancia'}],
-  'Agency\n& Ownership': [{id:'F7.auto-mentalización'},{id:'F4.experiencia'}],
+  'Agency\n& Ownership': [{id:'F7.auto-mentalización'},{id:'F4.experiencia'},{id:'F7.coherencia-autobiografica',pole:'neg',inv:true,w:0.5}],
   'Sensorimotor\nDynamics': [{id:'F2.sensorial'},{id:'NM.dismetria'},{id:'NM.tandem'}]
 };
 const RDOC_GROUPS = [
@@ -1367,6 +1396,7 @@ function drawRadarBipolar(containerId, domainMap, title, color, groups) {
     'Auto-evaluación':'Autoeval.',
     'Visión Prospectiva':'Prospectiva',
     'Testing de Realidad':'Realidad',
+    'Coherencia Autobiográfica':'Autobio.',
     'Auto-Mentalización':'Auto-ment.',
     'Mentalización del Otro':'Otro',
     'Coherencia Global':'Coherencia',
@@ -1424,6 +1454,8 @@ function drawRadarBipolar(containerId, domainMap, title, color, groups) {
     if (s === null || s === undefined || s === 'NE') return null;
     const raw = parseInt(s, 10);
     if (Number.isNaN(raw)) return null;
+    if (d.pole === 'neg' && raw >= 0) return null;
+    if (d.pole === 'pos' && raw <= 0) return null;
     let value = raw;
     if (d.id === 'F4.contenido') value = raw - 2;
     else if (d.inv) value = -raw;
@@ -1630,6 +1662,8 @@ function getFeederSignal(d) {
   if (s === 'NE') return {evaluated:false, ne:true, dim:d};
   const raw = parseInt(s, 10);
   if (Number.isNaN(raw)) return {evaluated:false, ne:false, dim:d};
+  if (d.pole === 'neg' && raw >= 0) return {evaluated:false, ne:false, excluded:true, dim:d};
+  if (d.pole === 'pos' && raw <= 0) return {evaluated:false, ne:false, excluded:true, dim:d};
   let pathVal, sig, extreme;
   if (d.id === 'F4.contenido') {
     pathVal = raw;
@@ -2125,6 +2159,7 @@ function generateMSEReport() {
 
   // ── 7. MENTALIZACIÓN / INSIGHT / JUICIO ──
   const f7t = sc('F7.testing');
+  const f7autoBio = sc('F7.coherencia-autobiografica');
   const insight = sc('I.insight');
   const juicio = sc('J.juicio');
   const ego = sc('E.egodistonia');
@@ -2133,6 +2168,12 @@ function generateMSEReport() {
     const n = parseInt(f7t, 10);
     if (n === 0) mentFrags.push('testing de realidad preservado');
     else if (n < 0) mentFrags.push(`testing de realidad comprometido (${n === -2 ? 'pérdida franca' : 'dudoso'})`);
+  }
+  if (f7autoBio !== null) {
+    const n = parseInt(f7autoBio, 10);
+    if (n === 0) mentFrags.push('coherencia autobiográfica integrada');
+    else if (n < 0) mentFrags.push(`coherencia autobiográfica fragmentada (${n === -2 ? 'reliving/flashbacks' : 'intrusiones o lagunas parciales'})`);
+    else if (n > 0) mentFrags.push(`coherencia autobiográfica sobreconstruida (${n === 2 ? 'confabulación' : 'relleno inferencial corregible'})`);
   }
   if (insight !== null) {
     const n = parseInt(insight, 10);
@@ -2240,7 +2281,10 @@ const BRAIN_NETS = [
 ];
 
 // Matriz fenotipo->red. Formato: { netId: [peso 1-3, direccion] }
-// direccion: 'mirror' (s<0 -> hipo, s>0 -> hiper); 'hypo' (solo s<0); 'hyper' (solo s>0)
+// direccion: 'mirror' (s<0 -> hipo, s>0 -> hiper); 'hypo' (solo s<0); 'hyper' (solo s>0).
+// Para dimensiones con polos mecanisticamente distintos, usar alternativas:
+// [[peso,'negHypo'|'negHyper'], [peso,'posHypo'|'posHyper']].
+// Para escalas unipolares patologicas 0..4, usar 'pathHypo' / 'pathHyper'.
 const BRAIN_MATRIX = {
   // ── NC: Gate ──
   'NC.conciencia':           { LC_NE:[3,'mirror'], DMN:[1,'hypo'], CEN:[1,'hypo'] },
@@ -2261,36 +2305,51 @@ const BRAIN_MATRIX = {
   'F3.drive':                { DA_STR:[2,'mirror'], MESO:[2,'mirror'], CEN:[1,'hypo'] },
   // ── F4: pensamiento ──
   'F4.experiencia':          { DMN:[2,'mirror'], SAL:[2,'mirror'], CEN:[1,'hypo'] },
-  'F4.contenido':            { SAL:[3,'hyper'], DMN:[2,'hyper'], HPC:[2,'hypo'] },
+  'F4.contenido':            { SAL:[3,'pathHyper'], DMN:[2,'pathHyper'], HPC:[2,'pathHypo'] },
   // ── F5: atencion ──
-  'F5.regulación':           { CEN:[3,'mirror'], SAL:[2,'hypo'] },
+  'F5.regulación':           { CEN:[[3,'negHypo'], [3,'posHyper']], SAL:[[2,'negHyper'], [2,'posHypo']] },
   // ── F6: valencia negativa ──
   'F6.amenaza':              { OFC_AMY:[3,'mirror'], LC_NE:[1,'hyper'] },
   'F6.frustración':          { OFC_AMY:[2,'mirror'], CEN:[1,'hypo'] },
   'F6.animo-meta':           { DMN:[2,'mirror'], MESO:[1,'hypo'], OFC_AMY:[1,'mirror'] },
   'F6.autoevaluación':       { DMN:[3,'mirror'], CEN:[1,'hypo'] },
-  'F6.desesperanza':         { DMN:[2,'hypo'], MESO:[2,'hypo'], OFC_AMY:[1,'hypo'] },
+  'F6.desesperanza':         { DMN:[[2,'negHypo'], [2,'posHyper']], MESO:[[2,'negHypo'], [2,'posHyper']], OFC_AMY:[[1,'negHypo'], [1,'posHypo']] },
   // ── F7: mentalizacion ──
   'F7.auto-mentalización':   { DMN:[3,'mirror'], CEN:[1,'mirror'] },
   'F7.mentalización-otro':   { DMN:[3,'mirror'] },
-  'F7.testing':              { HPC:[2,'hypo'], SAL:[2,'hyper'], CEN:[1,'hypo'] },
+  'F7.testing':              {
+    HPC: [[2,'negHypo']],
+    SAL: [[2,'negHyper'], [2,'posHyper']],
+    CEN: [[1,'negHypo'], [1,'posHyper']],
+    OFC_AMY: [[1,'posHyper']]
+  },
+  'F7.coherencia-autobiografica': {
+    HPC: [[3,'negHypo'], [3,'posHypo']],
+    DMN: [[2,'negHypo'], [2,'posHyper']],
+    SAL: [[2,'negHyper']],
+    OFC_AMY: [[2,'negHyper'], [2,'posHypo']],
+    LC_NE: [[1,'negHyper']],
+    CEN: [[1,'negHypo'], [2,'posHypo']]
+  },
   // ── G: global ──
   'G.arousal':               { LC_NE:[3,'mirror'], SAL:[1,'hyper'] },
-  'G.coherencia':            { CEN:[2,'hypo'], DMN:[1,'hypo'], SAL:[1,'hypo'] },
+  'G.coherencia':            { CEN:[[2,'negHypo'], [2,'posHyper']], DMN:[[1,'negHypo'], [1,'posHypo']], SAL:[[1,'negHypo'], [1,'posHypo']] },
   'G.sueno-ritmo':           { LC_NE:[2,'mirror'] },
   'G.interocepcion':         { SAL:[2,'mirror'] },
   // ── NM: neuromotor (parcialmente cerebeloso; cerebelo no modelado como red) ──
   'NM.luria':                { CEN:[2,'hypo'], DA_STR:[1,'hypo'] },
   'NM.alternancia':          { CEN:[1,'hypo'], DA_STR:[1,'hypo'] },
-  'NM.tic':                  { DA_STR:[1,'hyper'] },
-  'NM.estereotipia':         { DA_STR:[1,'hyper'] },
-  'NM.diskinesia':           { DA_STR:[2,'hyper'] },
-  'NM.distonia':             { DA_STR:[1,'hyper'] },
-  'NM.acatisia':             { DA_STR:[2,'hyper'], LC_NE:[1,'hyper'] },
-  'NM.parkinsonismo':        { DA_STR:[3,'hypo'] },
-  'NM.tremor':               { DA_STR:[1,'hyper'] },
+  'NM.tic':                  { DA_STR:[1,'negHyper'] },
+  'NM.estereotipia':         { DA_STR:[1,'negHyper'] },
+  'NM.diskinesia':           { DA_STR:[2,'negHyper'] },
+  'NM.distonia':             { DA_STR:[1,'negHyper'] },
+  'NM.acatisia':             { DA_STR:[2,'negHyper'], LC_NE:[1,'negHyper'] },
+  'NM.parkinsonismo':        { DA_STR:[3,'negHypo'] },
+  'NM.tremor':               { DA_STR:[1,'negHyper'] },
   // ── META ──
-  'META.enfermedad':         { CEN:[1,'hypo'], DMN:[1,'hyper'] }
+  'J.juicio':                { CEN:[2,'negHypo'], OFC_AMY:[1,'negHypo'] },
+  'I.insight':               { CEN:[1,'negHypo'], DMN:[1,'negHypo'] },
+  'E.egodistonia':           { SAL:[[1,'negHyper'], [1,'posHypo']], OFC_AMY:[[1,'negHyper'], [1,'posHypo']] }
 };
 
 function brainReadScores() {
@@ -2310,25 +2369,63 @@ function brainInfer() {
   BRAIN_NETS.forEach(net => {
     result[net.id] = { hypo:0, hyper:0, maxHypo:0, maxHyper:0, contribs:[] };
   });
+  function brainRuleMagnitude(dim, s, dir) {
+    if (dim === 'F4.contenido' && (dir === 'pathHypo' || dir === 'pathHyper')) {
+      return Math.min(1, Math.max(0, s / 4));
+    }
+    return Math.min(1, Math.abs(s) / 2);
+  }
+  function addBrainRule(r, dim, s, mag, w, dir, signAware) {
+    const isNeg = s < 0;
+    const isPos = s > 0;
+    const isZero = s === 0;
+    const active = (
+      dir === 'mirror' || dir === 'hypo' || dir === 'hyper' ||
+      dir === 'pathHypo' || dir === 'pathHyper' ||
+      (dir === 'negHypo' || dir === 'negHyper' ? isNeg : false) ||
+      (dir === 'posHypo' || dir === 'posHyper' ? isPos : false)
+    );
+    if (signAware && !active && !isZero) return;
+
+    if (dir === 'mirror') {
+      r.maxHypo += w; r.maxHyper += w;
+      if (isNeg) { r.hypo += w*mag; r.contribs.push({dim, s, contrib:w*mag, dir:'hypo'}); }
+      else if (isPos) { r.hyper += w*mag; r.contribs.push({dim, s, contrib:w*mag, dir:'hyper'}); }
+    } else if (dir === 'hypo') {
+      r.maxHypo += w;
+      if (isNeg) { r.hypo += w*mag; r.contribs.push({dim, s, contrib:w*mag, dir:'hypo'}); }
+    } else if (dir === 'hyper') {
+      r.maxHyper += w;
+      if (isPos) { r.hyper += w*mag; r.contribs.push({dim, s, contrib:w*mag, dir:'hyper'}); }
+    } else if (dir === 'pathHypo') {
+      r.maxHypo += w;
+      if (s > 0) { r.hypo += w*mag; r.contribs.push({dim, s, contrib:w*mag, dir:'hypo'}); }
+    } else if (dir === 'pathHyper') {
+      r.maxHyper += w;
+      if (s > 0) { r.hyper += w*mag; r.contribs.push({dim, s, contrib:w*mag, dir:'hyper'}); }
+    } else if (dir === 'negHypo') {
+      r.maxHypo += w;
+      if (isNeg) { r.hypo += w*mag; r.contribs.push({dim, s, contrib:w*mag, dir:'hypo'}); }
+    } else if (dir === 'negHyper') {
+      r.maxHyper += w;
+      if (isNeg) { r.hyper += w*mag; r.contribs.push({dim, s, contrib:w*mag, dir:'hyper'}); }
+    } else if (dir === 'posHypo') {
+      r.maxHypo += w;
+      if (isPos) { r.hypo += w*mag; r.contribs.push({dim, s, contrib:w*mag, dir:'hypo'}); }
+    } else if (dir === 'posHyper') {
+      r.maxHyper += w;
+      if (isPos) { r.hyper += w*mag; r.contribs.push({dim, s, contrib:w*mag, dir:'hyper'}); }
+    }
+  }
   Object.entries(scores).forEach(([dim, s]) => {
     const mapping = BRAIN_MATRIX[dim];
     if (!mapping) return;
-    const mag = Math.abs(s) / 2; // 0 a 1
     Object.entries(mapping).forEach(([netId, spec]) => {
-      const [w, dir] = spec;
       const r = result[netId];
       if (!r) return;
-      if (dir === 'mirror') {
-        r.maxHypo += w; r.maxHyper += w;
-        if (s < 0) { r.hypo += w*mag; r.contribs.push({dim, s, contrib:w*mag, dir:'hypo'}); }
-        else if (s > 0) { r.hyper += w*mag; r.contribs.push({dim, s, contrib:w*mag, dir:'hyper'}); }
-      } else if (dir === 'hypo') {
-        r.maxHypo += w;
-        if (s < 0) { r.hypo += w*mag; r.contribs.push({dim, s, contrib:w*mag, dir:'hypo'}); }
-      } else if (dir === 'hyper') {
-        r.maxHyper += w;
-        if (s > 0) { r.hyper += w*mag; r.contribs.push({dim, s, contrib:w*mag, dir:'hyper'}); }
-      }
+      const rules = Array.isArray(spec?.[0]) ? spec : [spec];
+      const signAware = rules.length > 1 || String(rules[0]?.[1] || '').startsWith('neg') || String(rules[0]?.[1] || '').startsWith('pos');
+      rules.forEach(rule => addBrainRule(r, dim, s, brainRuleMagnitude(dim, s, rule[1]), rule[0], rule[1], signAware));
     });
   });
   Object.keys(result).forEach(netId => {
@@ -2350,6 +2447,70 @@ function brainDirColor(dir) {
 }
 function brainDirLabel(dir) {
   return dir === 'hypo' ? '&darr; hipo' : dir === 'hyper' ? '&uarr; hiper' : dir === 'mixed' ? '&harr; mixto' : '&minus;';
+}
+
+function brainConnectivityLevel(score) {
+  let level = 'Baja', color = '#2f9e44';
+  if (score >= 70) { level = 'Alta'; color = '#c92a2a'; }
+  else if (score >= 45) { level = 'Moderada'; color = '#d97706'; }
+  else if (score >= 20) { level = 'Leve'; color = '#1098ad'; }
+  return { level, color };
+}
+
+function brainGlobalConnectivityIndices(result) {
+  const vals = BRAIN_NETS.map(net => result[net.id]).filter(Boolean);
+  if (!vals.length) {
+    const empty = { score:0, level:'Sin datos', color:'#94a3b8', activeCount:0, peak:0, mean:0 };
+    return { GND:empty, GNH:empty, GDD:empty };
+  }
+  function build(metric, includeMixed) {
+    const mean = vals.reduce((sum, r) => sum + r[metric], 0) / vals.length;
+    const activeCount = vals.filter(r => r[metric] >= 0.25).length;
+    const spread = activeCount / vals.length;
+    const peak = Math.max(...vals.map(r => r[metric]));
+    const mixed = includeMixed ? vals.filter(r => r.dir === 'mixed').length / vals.length : 0;
+    const base = 0.55*mean + 0.30*spread + 0.15*peak;
+    const score = Math.round(Math.min(1, base + 0.05*mixed) * 100);
+    return { score, ...brainConnectivityLevel(score), activeCount, peak, mean };
+  }
+  return {
+    GND: build('pHypo', false),
+    GNH: build('pHyper', false),
+    GDD: build('alter', true)
+  };
+}
+
+function brainDisconnectIndex(result) {
+  return brainGlobalConnectivityIndices(result).GDD;
+}
+
+function brainIndexChip(label, title, idx) {
+  return `<div style="flex:1;min-width:78px;padding:6px 7px;border:1px solid ${idx.color}33;border-radius:5px;background:#fff">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:6px">
+      <span style="font-size:9px;font-weight:800;color:${idx.color};letter-spacing:0.04em">${label}</span>
+      <span style="font-size:13px;font-weight:800;color:${idx.color}">${idx.score}</span>
+    </div>
+    <div style="font-size:9px;color:var(--text-muted);line-height:1.15">${title}</div>
+  </div>`;
+}
+
+function brainDisconnectCard(result) {
+  const indices = brainGlobalConnectivityIndices(result);
+  const idx = indices.GDD;
+  const pctPeak = Math.round(idx.peak * 100);
+  const pctMean = Math.round(idx.mean * 100);
+  return `<div class="brain-disconnect" style="margin-top:10px;padding:9px 10px;border:1px solid ${idx.color}33;border-left:3px solid ${idx.color};border-radius:6px;background:${idx.color}0d;font-family:var(--font-body)">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+      <div style="font-size:10px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;color:${idx.color}">GDD &middot; Disconectividad global</div>
+      <div style="font-size:18px;font-weight:800;color:${idx.color};line-height:1">${idx.score}<span style="font-size:10px;font-weight:700">/100</span></div>
+    </div>
+    <div style="font-size:11px;color:var(--text);margin-top:2px">${idx.level} &middot; ${idx.activeCount}/${BRAIN_NETS.length} redes activas &middot; pico ${pctPeak}% &middot; media ${pctMean}%</div>
+    <div style="height:5px;background:#e7e5e4;border-radius:999px;margin-top:7px;overflow:hidden"><div style="height:100%;width:${idx.score}%;background:${idx.color};border-radius:999px"></div></div>
+    <div style="display:flex;gap:6px;margin-top:7px">
+      ${brainIndexChip('GND','desconexi&oacute;n',indices.GND)}
+      ${brainIndexChip('GNH','hiperconectividad',indices.GNH)}
+    </div>
+  </div>`;
 }
 
 function brainRenderSVG(opts) {
@@ -2515,10 +2676,11 @@ function brainRenderSVG(opts) {
 
   const disclaimer = `<div class="brain-disclaimer"><strong>Inferencia probabil&iacute;stica</strong> sobre redes/circuitos dadas <strong>${nScored}</strong> dimensiones puntuadas. Hip&oacute;tesis testeable, NO medici&oacute;n directa. Priors derivados de literatura cl&iacute;nico-neurocient&iacute;fica.</div>`;
 
+  const disconnect = brainDisconnectCard(result);
   if (compact) {
-    return svg + colormap + `<div class="brain-legend">${legend}</div>` + contribsHTML + disclaimer;
+    return svg + colormap + disconnect + `<div class="brain-legend">${legend}</div>` + contribsHTML + disclaimer;
   }
-  return `<div>${svg}${colormap}${disclaimer}</div><div><div class="brain-legend">${legend}</div>${contribsHTML}</div>`;
+  return `<div>${svg}${colormap}${disconnect}${disclaimer}</div><div><div class="brain-legend">${legend}</div>${contribsHTML}</div>`;
 }
 
 function brainUpdate() {
