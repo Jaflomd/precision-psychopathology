@@ -2312,7 +2312,7 @@ function renderHiTOPGrid() {
       html += `<div class="hitop-group-head" style="color:${g.color};background:${g.color}11;border-bottom-color:${g.color}">${g.name.toUpperCase()}</div>`;
       html += `<div class="hitop-subs">`;
       for (let i = g.from; i <= g.to; i++) {
-        const subName = labels[i].replace(/\n/g, ' ');
+        const subName = labels[i].replace(/\n/g, ' ').replace('Cognición Bedside', 'Cognición');
         const feeders = HITOP_MAP[labels[i]];
         const feederData = feeders.map(getFeederSignal);
         const evaluated = feederData.filter(f => f.evaluated);

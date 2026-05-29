@@ -1140,7 +1140,7 @@ const HITOP_MAP = {
   'Sensación alt.\n+ Atención': [{id:'F5.regulación',abs:true},{id:'F2.sensorial',abs:true,w:0.75}],
   'Comportamiento\nRitualizado': [{id:'F7.testing'},{id:'F5.regulación'},{id:'G.coherencia',w:0.5},{id:'FUN.psp_autocuidado',w:0.9}],
   'Comunicación\nSocial': [{id:'F1.expresividad',inv:true},{id:'F7.mentalización-otro',inv:true},{id:'G.coherencia',inv:true,w:0.5}],
-  'Cognición\nBedside': [{id:'NC.fluencia',abs:true},{id:'NC.digit',abs:true},{id:'NC.tmt',abs:true},{id:'NC.clock',abs:true},{id:'NC.recall',abs:true},{id:'F7.coherencia-autobiografica',pole:'pos',w:0.75}],
+  'Cognición': [{id:'NC.fluencia',abs:true},{id:'NC.digit',abs:true},{id:'NC.tmt',abs:true},{id:'NC.clock',abs:true},{id:'NC.recall',abs:true},{id:'F7.coherencia-autobiografica',pole:'pos',w:0.75}],
   // Externalizante, manía y desapego > Externalizante
   'Afecto Neg.\nExternalizado': [{id:'F6.frustración'}],
   'Desinhibición': [{id:'F3.drive'},{id:'F6.amenaza',inv:true,w:0.75},{id:'F2.velocidad',w:0.5},{id:'FUN.psp_utiles',w:0.5}],
