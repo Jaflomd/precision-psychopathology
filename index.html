@@ -715,6 +715,27 @@ main { padding: 22px 28px 60px; max-width: 1400px; margin: 0 auto; }
   .mse-report-text { padding: 14px 16px; min-height: 280px; font-size: 13.5px; }
 }
 
+/* ── CSV EXPORT BLOCK ── */
+.export-block { border: 1px solid var(--border); }
+.export-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.export-btn {
+  font-family: var(--font-body); font-size: 12.5px; font-weight: 600;
+  padding: 9px 14px; border-radius: 8px; cursor: pointer;
+  background: var(--bg); color: var(--text); border: 1px solid var(--border);
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+.export-btn:hover { background: var(--bg-alt); border-color: var(--azul); }
+.export-btn:active { transform: translateY(1px); }
+.export-btn-primary { background: var(--azul); color: #fff; border-color: var(--azul); }
+.export-btn-primary:hover { background: #16306e; border-color: #16306e; color: #fff; }
+.export-btn-danger { color: var(--red); border-color: var(--red-soft, rgba(181,38,26,0.3)); }
+.export-btn-danger:hover { background: var(--red-soft); border-color: var(--red); }
+.export-count { margin-top: 10px; font-size: 11px; color: var(--text-muted); font-family: var(--font-body); }
+@media (max-width: 720px) {
+  .export-actions { flex-direction: column; }
+  .export-btn { width: 100%; padding: 12px; font-size: 13px; }
+}
+
 /* ── BRAIN INFERENCE WIDGET (portado de v2) ── */
 .brain-fab { position: fixed; bottom: 80px; right: 24px; width: 56px; height: 56px; border-radius: 50%; background: var(--azul); color: #fff; border: none; cursor: pointer; box-shadow: 0 8px 24px rgba(30,58,138,0.25); display: flex; align-items: center; justify-content: center; font-size: 26px; z-index: 250; transition: transform 0.2s ease, box-shadow 0.2s ease; }
 .brain-fab:hover { transform: scale(1.08); box-shadow: 0 12px 32px rgba(30,58,138,0.3); }
@@ -2176,6 +2197,17 @@ function renderProfile() {
   const mseEscaped = mseReport.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
   c.innerHTML = `
+    <div class="profile-block export-block">
+      <h2>Exportar datos (CSV)</h2>
+      <div class="h-sub">Una fila por paciente: score, nivel y especificadores por ítem, crosswalks (AMDP · ICD-11 · DSM-5 · Fish · HiTOP · RDoC…) por el score elegido, y síntesis (outcomes Capa 2, perfiles bMSE/RDoC/HiTOP, reporte MSE). El acumulado se guarda en este navegador. No incluyas datos identificables en el ID.</div>
+      <div class="export-actions">
+        <button class="export-btn export-btn-primary" onclick="exportAddAndDownloadAll()">+ Agregar paciente actual y descargar todos</button>
+        <button class="export-btn" onclick="exportSoloActual()">Solo este paciente</button>
+        <button class="export-btn" onclick="exportDownloadAcc()">Descargar acumulado</button>
+        <button class="export-btn export-btn-danger" onclick="exportResetAcc()">Reiniciar acumulado</button>
+      </div>
+      <div class="export-count">Pacientes en acumulado: <strong id="exportAccCount">0</strong></div>
+    </div>
     <details class="profile-block profile-block-collapsible">
       <summary>
         <h2>Reporte clínico (copy-paste)</h2>
@@ -2219,6 +2251,7 @@ function renderProfile() {
   catch (e) { console.warn('bMSE radial:', e.message); }
   try { if (typeof renderRadarRDoC === 'function') renderRadarRDoC(); }
   catch (e) { console.warn('RDoC radial:', e.message); }
+  try { _expUpdateCount(); } catch (e) {}
 }
 
 function copyMSEReport(btn) {
@@ -2336,6 +2369,175 @@ if (typeof brainUpdate === 'function') {
   };
   // Primer update al cargar (en caso de state previa)
   try { brainUpdate(); } catch (e) {}
+}
+
+// ── CSV EXPORT (paciente actual + acumulador local) ──
+// Una fila = un paciente. Columnas: meta, score/nivel/especificadores por ítem,
+// crosswalk por sistema y por score elegido, y síntesis "redes" (outcomes Capa 2,
+// perfiles bMSE/RDoC/HiTOP, reporte MSE). Acumula en localStorage 'bmse_export_rows'.
+const BMSE_EXPORT_ACC_KEY = 'bmse_export_rows';
+
+function _expNormHead(h) {
+  return String(h == null ? '' : h).replace(/−/g, '-').replace(/\s+/g, '').replace(/^\+/, '');
+}
+function _expScoreKey(id) {
+  const s = state[id] && state[id].score;
+  return (s === null || s === undefined) ? '' : String(s);
+}
+function _expNivel(d, key, axisDetails, axisScores) {
+  if (key === '' || key === 'NE') return key || '';
+  if (axisScores && axisScores[key]) return axisScores[key];
+  if (d.scores && d.scores[key]) return d.scores[key];
+  if (d.details && d.details[key] && d.details[key].nivel) return d.details[key].nivel;
+  if (axisDetails && axisDetails[key] && axisDetails[key].nivel) return axisDetails[key].nivel;
+  return '';
+}
+function _expSpecifiers(id) {
+  const sp = state[id] && state[id].specifiers;
+  if (!sp) return '';
+  const parts = [];
+  Object.keys(sp).forEach(k => {
+    const v = sp[k];
+    if (v === true) parts.push(k);
+    else if (v && v !== false) parts.push(k + '=' + v);
+  });
+  return parts.join(' | ');
+}
+function _expStandardCols(fw) {
+  if (!fw || !fw.headers || !fw.rows) return null;
+  const heads = fw.headers.map(_expNormHead);
+  const want = { '-2': 1, '-1': 1, '0': 1, '1': 1, '2': 1 };
+  return heads.filter(h => want[h]).length >= 4 ? heads : null;
+}
+function _expSerializeTable(fw) {
+  if (!fw || !fw.rows) return '';
+  const lines = [];
+  if (fw.headers) lines.push(fw.headers.join(' | '));
+  fw.rows.forEach(r => lines.push(r.join(' | ')));
+  return lines.join('\n');
+}
+function _expFlatItems() {
+  const out = [];
+  DIMS.forEach(d => {
+    if (d.type === 'multitest' && Array.isArray(d.tests)) {
+      d.tests.forEach(t => out.push({ id: t.id, dim: d, frameworks: d.frameworks }));
+    } else if (d.type === 'two_axis' && Array.isArray(d.axes)) {
+      d.axes.forEach((a, i) => out.push({ id: a.id, dim: d, axisDetails: i === 0 ? d.details_p1 : d.details_p2, axisScores: a.scores, frameworks: d.frameworks }));
+    } else {
+      out.push({ id: d.id, dim: d, frameworks: d.frameworks });
+    }
+  });
+  return out;
+}
+function _expSafe(fn, fb) { try { return fn(); } catch (e) { return fb; } }
+
+function buildExportRow(pacienteId) {
+  const columns = [], values = {};
+  const put = (col, val) => {
+    if (values[col] === undefined) columns.push(col);
+    values[col] = (val === null || val === undefined) ? '' : val;
+  };
+  put('meta|paciente_id', pacienteId || '');
+  put('meta|export_ts', new Date().toISOString());
+  let nScored = 0;
+  _expFlatItems().forEach(it => {
+    const key = _expScoreKey(it.id);
+    if (key !== '' && key !== 'NE') nScored++;
+    put(it.id + '|score', key);
+    put(it.id + '|nivel', _expNivel(it.dim, key, it.axisDetails, it.axisScores));
+    put(it.id + '|especificadores', _expSpecifiers(it.id));
+    const heads = _expStandardCols(it.frameworks);
+    if (heads) {
+      const col = (key && key !== 'NE') ? heads.indexOf(_expNormHead(key)) : -1;
+      it.frameworks.rows.forEach(r => {
+        const val = (col > 0 && r[col] !== undefined) ? r[col] : '';
+        put(it.id + '|cw:' + r[0], (val === '—') ? '' : val);
+      });
+    } else if (it.frameworks) {
+      put(it.id + '|crosswalk_full', _expSerializeTable(it.frameworks));
+    }
+  });
+  put('meta|n_scored', nScored);
+  // REDES / síntesis
+  [['suicidio', typeof outcomeSuicidio === 'function' && outcomeSuicidio],
+   ['agresividad', typeof outcomeAgresividad === 'function' && outcomeAgresividad],
+   ['negligencia', typeof outcomeNegligencia === 'function' && outcomeNegligencia],
+   ['capacidad', typeof outcomeCapacidad === 'function' && outcomeCapacidad]
+  ].forEach(p => {
+    if (!p[1]) return;
+    const o = _expSafe(p[1], null);
+    put('redes|outcome:' + p[0] + ':status', o ? (o.statusLabel || o.status) : '');
+    put('redes|outcome:' + p[0] + ':summary', o ? o.summary : '');
+    put('redes|outcome:' + p[0] + ':signals', o && o.signals ? o.signals.join(' | ') : '');
+  });
+  if (typeof calcDomainScore === 'function') {
+    [['bMSE', typeof BMSE_MAP !== 'undefined' && BMSE_MAP],
+     ['RDoC', typeof RDOC_MAP !== 'undefined' && RDOC_MAP],
+     ['HiTOP', typeof HITOP_MAP !== 'undefined' && HITOP_MAP]
+    ].forEach(pr => {
+      if (!pr[1]) return;
+      Object.keys(pr[1]).forEach(k => {
+        const v = _expSafe(() => calcDomainScore(pr[1][k]), '');
+        put('redes|' + pr[0] + ':' + k.replace(/\n/g, ' ').trim(), (typeof v === 'number') ? Math.round(v * 100) / 100 : '');
+      });
+    });
+  }
+  if (typeof generateMSEReport === 'function') put('redes|MSE_report', _expSafe(generateMSEReport, ''));
+  return { columns, values };
+}
+function _expRowsToCSV(rows) {
+  const cols = [], seen = {};
+  rows.forEach(r => (r.__cols || Object.keys(r)).forEach(c => { if (!seen[c]) { seen[c] = 1; cols.push(c); } }));
+  const esc = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+  const out = [cols.map(esc).join(',')];
+  rows.forEach(r => out.push(cols.map(c => esc(r[c])).join(',')));
+  return out.join('\r\n');
+}
+function _expDownload(csv, fname) {
+  const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = fname;
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+function _expStamp() { return new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19); }
+function _expLoadAcc() { try { return JSON.parse(localStorage.getItem(BMSE_EXPORT_ACC_KEY)) || []; } catch (e) { return []; } }
+function _expSaveAcc(a) { localStorage.setItem(BMSE_EXPORT_ACC_KEY, JSON.stringify(a)); }
+function _expRowToFlat(row) { const o = {}; row.columns.forEach(c => { o[c] = row.values[c]; }); o.__cols = row.columns; return o; }
+
+function exportAddAndDownloadAll() {
+  const scored = _expFlatItems().filter(it => { const k = _expScoreKey(it.id); return k !== '' && k !== 'NE'; }).length;
+  if (scored === 0 && !confirm('No hay dimensiones puntuadas en el paciente actual. ¿Exportar de todos modos?')) return;
+  const pid = prompt('ID del paciente (etiqueta libre, sin datos identificables):', 'P-' + _expStamp());
+  if (pid === null) return;
+  const row = buildExportRow(pid);
+  const acc = _expLoadAcc();
+  acc.push(_expRowToFlat(row));
+  _expSaveAcc(acc);
+  _expDownload(_expRowsToCSV(acc), 'bmse_export_' + acc.length + 'pac_' + _expStamp() + '.csv');
+  _expUpdateCount();
+}
+function exportSoloActual() {
+  const pid = prompt('ID del paciente (solo este, no se acumula):', 'P-' + _expStamp());
+  if (pid === null) return;
+  const row = buildExportRow(pid);
+  _expDownload(_expRowsToCSV([_expRowToFlat(row)]), 'bmse_' + (pid || 'paciente') + '_' + _expStamp() + '.csv');
+}
+function exportDownloadAcc() {
+  const acc = _expLoadAcc();
+  if (!acc.length) { alert('El acumulado está vacío. Usa "Agregar paciente actual" primero.'); return; }
+  _expDownload(_expRowsToCSV(acc), 'bmse_export_' + acc.length + 'pac_' + _expStamp() + '.csv');
+}
+function exportResetAcc() {
+  if (confirm('¿Borrar el acumulado de exportación? (no afecta al paciente cargado)')) {
+    localStorage.removeItem(BMSE_EXPORT_ACC_KEY);
+    _expUpdateCount();
+  }
+}
+function _expUpdateCount() {
+  const el = document.getElementById('exportAccCount');
+  if (el) el.textContent = _expLoadAcc().length;
 }
 
 // ── MOBILE ACTION BAR LOGIC ──
