@@ -1,0 +1,2383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>bMSE · Yachay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* ── Base surfaces ── */
+  --bg: #ffffff;
+  --bg-alt: #fafaf9;
+  --surface: #f4f4f2;
+  --surface-raised: #f8f8f6;
+
+  /* ── Azul system (extended depth) ── */
+  --azul: #1e3a8a;
+  --azul-deep: #162d72;
+  --azul-mid: #3b5fcc;
+  --azul-light: #4f75d8;
+  --azul-soft: rgba(30,58,138,0.055);
+  --azul-soft-hover: rgba(30,58,138,0.09);
+  --azul-border: rgba(30,58,138,0.16);
+  --azul-border-strong: rgba(30,58,138,0.28);
+  /* gradient variants */
+  --azul-grad: linear-gradient(135deg, #1e3a8a 0%, #1e4da8 60%, #2563c4 100%);
+  --azul-grad-subtle: linear-gradient(135deg, #1e3a8a 0%, #243d97 100%);
+
+  /* ── Teal system ── */
+  --teal: #0e8fa0;
+  --teal-bright: #1098ad;
+  --teal-soft: rgba(14,143,160,0.07);
+  --teal-border: rgba(14,143,160,0.24);
+
+  /* ── Semantic colors ── */
+  --text: #18160f;
+  --text-muted: #6b6760;
+  --text-subtle: #9b9590;
+  --border: #e8e6e3;
+  --border-strong: #d2ceca;
+
+  --red: #b5261a;
+  --red-soft: rgba(181,38,26,0.06);
+  --orange: #c2660d;
+  --orange-soft: rgba(194,102,13,0.06);
+  --gray: #57534e;
+  --green: #2f9e44;
+  --green-soft: rgba(47,158,68,0.07);
+  --purple: #5e3aa6;
+  --gold: #b8891e;
+
+  /* ── Shadow system (multi-layer, like Stripe/Linear) ── */
+  --shadow-xs: 0 1px 2px rgba(24,22,15,0.04);
+  --shadow:    0 1px 3px rgba(24,22,15,0.06), 0 1px 2px rgba(24,22,15,0.04);
+  --shadow-md: 0 4px 8px rgba(24,22,15,0.07), 0 1px 3px rgba(24,22,15,0.05);
+  --shadow-lg: 0 8px 24px rgba(24,22,15,0.10), 0 2px 6px rgba(24,22,15,0.06);
+  --shadow-xl: 0 16px 40px rgba(24,22,15,0.12), 0 4px 12px rgba(24,22,15,0.07);
+  /* inset glow for selected state */
+  --shadow-azul: 0 0 0 3px rgba(30,58,138,0.14), 0 2px 6px rgba(30,58,138,0.20);
+
+  /* ── Radius system ── */
+  --r-sm: 5px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-pill: 999px;
+
+  /* ── Easing ── */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ── Typography ── */
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { background: var(--bg); }
+body {
+  font-family: var(--font-body);
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* HEADER — glassmorfismo refinado */
+header {
+  padding: 12px 28px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px) saturate(1.4);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 0 rgba(24,22,15,0.04), 0 2px 8px rgba(24,22,15,0.04);
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.brand { display: flex; align-items: baseline; gap: 10px; }
+.brand .mark {
+  font-family: var(--font-display);
+  font-size: 27px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  line-height: 1;
+}
+.brand .sub {
+  font-size: 9.5px;
+  color: var(--text-subtle);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.progress .bar {
+  width: 140px;
+  height: 3px;
+  background: var(--surface);
+  border-radius: var(--r-pill);
+  overflow: hidden;
+}
+/* gradient fill para progress bar */
+.progress .fill {
+  height: 100%;
+  background: var(--azul-grad);
+  transition: width 0.4s var(--ease-out);
+  width: 0%;
+}
+.completion-cta {
+  font-family: var(--font-body);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 5px 13px 6px;
+  border-radius: var(--r-pill);
+  background: var(--green);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(47,158,68,0.28);
+  animation: ctaPop 0.3s var(--ease-spring);
+}
+.completion-cta:hover {
+  background: #279039;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(47,158,68,0.32);
+}
+@keyframes ctaPop { from { opacity: 0; transform: scale(0.82); } to { opacity: 1; transform: scale(1); } }
+
+/* TABS — pill switcher refinado */
+.tabs {
+  margin-left: auto;
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  background: var(--surface);
+  border-radius: var(--r-pill);
+  border: 1px solid var(--border);
+}
+.tab-btn {
+  padding: 6px 20px;
+  border: none;
+  background: transparent;
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+.tab-btn:hover { color: var(--azul); }
+.tab-btn.active {
+  background: var(--azul-grad-subtle);
+  color: #fff;
+  box-shadow: var(--shadow-md), 0 0 0 1px rgba(30,58,138,0.18);
+}
+
+/* MAIN */
+main { padding: 22px 28px 60px; max-width: 1400px; margin: 0 auto; }
+
+/* SECTION NAV (sticky strip — C5) */
+.section-nav {
+  position: sticky;
+  top: 57px;
+  z-index: 40;
+  background: rgba(255,255,255,0.94);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 0 rgba(24,22,15,0.03);
+  padding: 7px 0 8px;
+  margin: -22px -28px 14px;
+  padding-left: 28px;
+  padding-right: 28px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  align-items: center;
+}
+.section-nav .nav-chip {
+  font-family: var(--font-body);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 3px 9px 4px;
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s var(--ease-out);
+  white-space: nowrap;
+  box-shadow: var(--shadow-xs);
+}
+.section-nav .nav-chip:hover {
+  background: var(--azul-soft-hover);
+  color: var(--azul);
+  border-color: var(--azul-border);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+.section-nav .nav-chip.complete {
+  background: var(--teal-soft);
+  color: var(--teal-bright);
+  border-color: var(--teal-border);
+}
+.section-nav .nav-chip .nav-count { opacity: 0.7; font-size: 9.5px; margin-left: 4px; font-weight: 500; }
+.section-nav .nav-help {
+  margin-left: auto;
+  font-size: 9.5px;
+  color: var(--text-muted);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.section-nav .nav-help kbd {
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-family: var(--font-body);
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 2px;
+}
+.section-nav .nav-sweep {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 4px 12px 5px;
+  border-radius: var(--r-pill);
+  background: var(--azul-grad-subtle);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s var(--ease-out);
+  box-shadow: 0 1px 4px rgba(30,58,138,0.22);
+}
+.section-nav .nav-sweep:hover {
+  background: var(--azul-deep);
+  box-shadow: 0 3px 8px rgba(30,58,138,0.28);
+  transform: translateY(-1px);
+}
+.section-nav .nav-sweep:active { transform: translateY(0); }
+.section-nav .nav-sweep:disabled { background: var(--text-subtle); cursor: not-allowed; opacity: 0.55; box-shadow: none; transform: none; }
+
+/* SECTION HEADER — con detalle visual (número de sección + accent line) */
+.section-head {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: -0.008em;
+  color: var(--text);
+  margin: 26px 0 6px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  scroll-margin-top: 115px;
+  position: relative;
+}
+/* accent underline animado en la section head activa/completa */
+.section-head::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--azul-grad);
+  border-radius: 2px;
+  transition: width 0.35s var(--ease-out);
+}
+.section-head.sec-complete::after { width: 48px; background: var(--teal); }
+/* Section collapse toggle — visible when section is complete */
+.section-head .sec-collapse {
+  font-family: var(--font-body);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 2px 8px 3px;
+  border-radius: 999px;
+  background: var(--teal-soft);
+  color: var(--teal);
+  border: 1px solid var(--teal-border);
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+  display: none;
+}
+.section-head.sec-complete .sec-collapse { display: inline-flex; align-items: center; gap: 4px; }
+.section-head.sec-complete .sec-collapse:hover { background: var(--teal); color: #fff; }
+.section-head.sec-complete { color: var(--teal); border-bottom-color: var(--teal-border); }
+/* Collapsed section grid: zero height, no pointer events */
+.section-grid.collapsed { display: none; }
+.section-head:first-child { margin-top: 0; }
+/* Two-column packing within a section for simple bipolar rows (C6) */
+.section-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+@media (min-width: 1100px) {
+  .section-grid.pack-2 { grid-template-columns: 1fr 1fr; column-gap: 22px; }
+  .section-grid.pack-2 > .dim-row + .dim-row { border-top: 1px solid var(--border); }
+  .section-grid.pack-2 > .dim-row:nth-child(2) { border-top: none; }
+}
+.section-grid > .dim-row.multitest,
+.section-grid > .dim-row.two-axis { grid-column: 1 / -1; }
+
+/* TENTATIVE (auto-default 0, awaiting clinician confirmation) — C1 */
+.s-btn.tentative { border-style: dashed; background: rgba(107,103,96,0.04); color: var(--text-muted); }
+.s-btn.tentative .num { font-weight: 600; opacity: 0.85; }
+.s-btn.tentative .lbl { opacity: 0.75; }
+.s-btn.tentative::after {
+  content: '?';
+  position: absolute;
+  margin-left: 4px;
+  font-size: 8.5px;
+  color: var(--orange);
+  font-weight: 700;
+  vertical-align: super;
+}
+.s-btn { position: relative; }
+.dim-row.tentative-only { background: transparent; }
+.dim-row.tentative-only.scored { background: transparent; }
+.section-head .count {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* DIMENSION ROW — compact con hover refinado */
+.dim-row {
+  display: grid;
+  grid-template-columns: minmax(170px, 200px) 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 5px 10px;
+  border-radius: var(--r-sm);
+  transition: background 0.12s ease, box-shadow 0.12s ease;
+}
+.section-grid.pack-2 > .dim-row { grid-template-columns: minmax(150px, 180px) 1fr; gap: 10px; }
+.dim-row + .dim-row { border-top: 1px solid var(--border); }
+.dim-row:hover { background: var(--bg-alt); }
+.dim-row.scored { background: linear-gradient(to right, rgba(248,248,246,0.6), var(--bg-alt)); }
+.dim-row.kbd-focus {
+  box-shadow: inset 3px 0 0 var(--azul);
+  background: var(--azul-soft);
+  outline: none;
+}
+/* Multitest sub-row keyboard focus */
+.mt-row.mt-kbd-focus { background: var(--azul-soft); border-radius: 4px; outline: 2px solid var(--azul-border); outline-offset: -1px; }
+.mt-row.mt-kbd-focus .mt-label { color: var(--azul); font-weight: 700; }
+.dim-name { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+.dim-name .code {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--teal);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  flex: 0 0 auto;
+}
+.dim-name .title {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dim-scores {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+/* Si el grupo contiene anchors (pills largos): stack vertical, full width */
+.dim-scores:has(.anchor) {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 3px;
+}
+.dim-scores:has(.anchor) .s-btn { width: 100%; }
+.dim-scores:has(.anchor) .s-btn.ne-btn { align-self: flex-end; width: auto; }
+
+/* SCORE BUTTONS — small pills premium */
+.s-btn {
+  flex: 0 1 auto;
+  padding: 3px 10px 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: #fff;
+  cursor: pointer;
+  font-family: var(--font-body);
+  color: var(--text-muted);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  transition: border-color 0.12s ease, color 0.12s ease, transform 0.12s var(--ease-out), box-shadow 0.12s ease, background 0.12s ease;
+  line-height: 1.2;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-align: left;
+  box-shadow: var(--shadow-xs);
+}
+.s-btn:hover {
+  border-color: var(--azul-border-strong);
+  color: var(--azul);
+  background: var(--azul-soft);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+.s-btn:active { transform: translateY(0); box-shadow: var(--shadow-xs); }
+.s-btn .num {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text);
+  flex: 0 0 auto;
+}
+.s-btn .lbl {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text);
+  flex: 0 0 auto;
+}
+.s-btn .anchor {
+  font-size: 10.5px;
+  font-weight: 400;
+  color: var(--text-muted);
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* Selected states con gradientes sutiles */
+.s-btn.selected {
+  color: #fff;
+  background: var(--azul-grad-subtle);
+  border-color: var(--azul);
+  box-shadow: var(--shadow-md), 0 0 0 1px rgba(30,58,138,0.15);
+  transform: translateY(0);
+}
+.s-btn.selected .num, .s-btn.selected .lbl, .s-btn.selected .anchor { color: rgba(255,255,255,0.96); }
+.s-btn.selected[data-val="-2"] {
+  background: linear-gradient(135deg, #b5261a, #d13222);
+  border-color: #b5261a;
+  box-shadow: 0 2px 6px rgba(181,38,26,0.28), 0 1px 2px rgba(181,38,26,0.16);
+}
+.s-btn.selected[data-val="-1"] {
+  background: linear-gradient(135deg, #b85c0a, #c2660d);
+  border-color: #c2660d;
+  box-shadow: 0 2px 6px rgba(194,102,13,0.28), 0 1px 2px rgba(194,102,13,0.16);
+}
+.s-btn.selected[data-val="0"] {
+  background: linear-gradient(135deg, #57534e, #706b65);
+  border-color: #57534e;
+  box-shadow: 0 2px 6px rgba(87,83,78,0.24);
+}
+.s-btn.selected[data-val="+1"], .s-btn.selected[data-val="1"] {
+  background: linear-gradient(135deg, #0e8fa0, #1098ad);
+  border-color: var(--teal);
+  box-shadow: 0 2px 6px rgba(14,143,160,0.28), 0 1px 2px rgba(14,143,160,0.16);
+}
+.s-btn.selected[data-val="+2"], .s-btn.selected[data-val="2"] {
+  background: var(--azul-grad-subtle);
+  border-color: var(--azul);
+  box-shadow: 0 2px 8px rgba(30,58,138,0.32), 0 1px 3px rgba(30,58,138,0.18);
+}
+.s-btn.selected[data-val="3"] {
+  background: linear-gradient(135deg, #5e3aa6, #7040c4);
+  border-color: #6f2d97;
+  box-shadow: 0 2px 6px rgba(110,45,151,0.28);
+}
+.s-btn.selected[data-val="4"] {
+  background: linear-gradient(135deg, #9b1e14, #b5261a);
+  border-color: var(--red);
+  box-shadow: 0 2px 8px rgba(181,38,26,0.34);
+}
+.s-btn.ne-btn { opacity: 0.48; padding: 3px 8px 4px; }
+.s-btn.ne-btn:hover { opacity: 1; transform: translateY(0); }
+.s-btn.ne-btn .num { font-size: 10px; }
+.s-btn.ne-btn .lbl { display: none; }
+.s-btn.ne-btn.selected { background: #a8a29e; border-color: #a8a29e; color: #fff; opacity: 1; box-shadow: none; }
+
+/* MULTITEST */
+.mt-stack { display: flex; flex-direction: column; gap: 2px; margin-top: 4px; }
+.mt-row {
+  display: grid;
+  grid-template-columns: minmax(170px, 200px) 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 2px 0;
+}
+.mt-row .mt-label { font-size: 12px; color: var(--text); font-weight: 500; padding-left: 10px; }
+
+/* TWO AXIS */
+.ax-stack { display: flex; flex-direction: column; gap: 2px; margin-top: 4px; }
+.ax-row {
+  display: grid;
+  grid-template-columns: minmax(170px, 200px) 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 2px 0;
+}
+.ax-row .ax-label {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding-left: 10px;
+}
+/* Multitest + two-axis: parent name como header arriba, alinea pills con dim-rows regulares */
+.dim-row.multitest, .dim-row.two-axis {
+  display: block;
+  padding: 8px 10px;
+}
+.dim-row.multitest .dim-name, .dim-row.two-axis .dim-name {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding-top: 0;
+  padding-bottom: 6px;
+  border-bottom: 1px dashed var(--border);
+  margin-bottom: 4px;
+  width: 100%;
+}
+
+/* MULTITEST abbreviated mode (C4) */
+.mt-row.collapsed { display: none; }
+.dim-row.multitest.expanded .mt-row.collapsed { display: grid; }
+.mt-expand-toggle {
+  margin-top: 4px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--azul);
+  background: transparent;
+  border: 1px dashed var(--azul-border);
+  border-radius: 4px;
+  padding: 3px 9px 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.mt-expand-toggle:hover { background: var(--azul-soft); border-color: var(--azul); }
+.mt-expand-toggle .chev { display: inline-block; transition: transform 0.18s; margin-right: 4px; }
+.dim-row.multitest.expanded .mt-expand-toggle .chev { transform: rotate(90deg); }
+/* per-test sweep button — applies "0" to all simple-score multitests with no current value */
+.mt-sweep-btn {
+  margin-left: 8px;
+  font-family: var(--font-body);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  padding: 2px 7px 3px;
+  cursor: pointer;
+}
+.mt-sweep-btn:hover { color: var(--azul); border-color: var(--azul); background: var(--azul-soft); }
+.dim-name .mt-meta { font-size: 9.5px; color: var(--text-muted); letter-spacing: 0.05em; text-transform: uppercase; font-weight: 600; margin-left: 8px; }
+/* Kbd hint badge shown on focused multitest row */
+.dim-row.kbd-focus .mt-enter-hint { display: inline-flex; }
+.mt-enter-hint { display: none; align-items: center; gap: 3px; font-size: 9px; color: var(--azul); font-weight: 600; letter-spacing: 0.04em; background: var(--azul-soft); border: 1px solid var(--azul-border); border-radius: 4px; padding: 1px 6px 2px; margin-left: 6px; }
+.mt-enter-hint kbd { font-family: var(--font-body); font-weight: 800; background: var(--azul); color: #fff; border-radius: 3px; padding: 0 4px; font-size: 8.5px; }
+
+/* PROFILE — full view (Capa 2 outcomes + HiTOP + summary) */
+.profile-block { margin-bottom: 42px; }
+.profile-block h2 {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--text);
+  letter-spacing: -0.01em;
+  margin-bottom: 5px;
+  line-height: 1.15;
+}
+.profile-block .h-sub {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  line-height: 1.55;
+  max-width: 720px;
+}
+.radar-container { width: 100%; max-width: 720px; margin: 0 auto; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.radar-container svg { display: block; max-width: 100%; height: auto; }
+
+/* Collapsible profile-block (MSE report) */
+.profile-block-collapsible { padding: 0; }
+.profile-block-collapsible > summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 4px 0;
+  user-select: none;
+}
+.profile-block-collapsible > summary::-webkit-details-marker { display: none; }
+.profile-block-collapsible > summary h2 { margin-bottom: 0; }
+.profile-block-collapsible > summary .collapse-hint {
+  font-size: 16px;
+  color: var(--text-muted);
+  transition: transform 0.2s ease;
+  font-weight: 700;
+}
+.profile-block-collapsible[open] > summary .collapse-hint { transform: rotate(180deg); }
+.profile-block-collapsible[open] > summary { margin-bottom: 8px; }
+.profile-block-collapsible:not([open]) > .h-sub,
+.profile-block-collapsible:not([open]) > .mse-report-wrap { display: none; }
+
+/* MSE Narrative Report — copy-paste ready */
+.mse-report-wrap { position: relative; }
+.mse-copy-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 6px 14px;
+  border: 1px solid var(--azul-border);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--azul);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  z-index: 2;
+  transition: all 0.15s;
+  box-shadow: var(--shadow);
+}
+.mse-copy-btn:hover { background: var(--azul); color: #fff; border-color: var(--azul); }
+.mse-copy-btn.copied { background: var(--green); color: #fff; border-color: var(--green); }
+.mse-report-text {
+  width: 100%;
+  min-height: 220px;
+  padding: 16px 18px;
+  padding-right: 130px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-alt);
+  color: var(--text);
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 14px;
+  line-height: 1.7;
+  resize: vertical;
+  box-shadow: var(--shadow);
+  letter-spacing: 0.005em;
+}
+.mse-report-text:focus { outline: 2px solid var(--azul-border); outline-offset: -2px; }
+@media (max-width: 720px) {
+  .mse-copy-btn { position: static; width: 100%; margin-bottom: 8px; padding: 12px; font-size: 13px; }
+  .mse-report-text { padding: 14px 16px; min-height: 280px; font-size: 13.5px; }
+}
+
+/* ── BRAIN INFERENCE WIDGET (portado de v2) ── */
+.brain-fab { position: fixed; bottom: 80px; right: 24px; width: 56px; height: 56px; border-radius: 50%; background: var(--azul); color: #fff; border: none; cursor: pointer; box-shadow: 0 8px 24px rgba(30,58,138,0.25); display: flex; align-items: center; justify-content: center; font-size: 26px; z-index: 250; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.brain-fab:hover { transform: scale(1.08); box-shadow: 0 12px 32px rgba(30,58,138,0.3); }
+.brain-fab .brain-fab-badge { position: absolute; top: -4px; right: -4px; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; background: var(--red); color: #fff; font-size: 10px; font-weight: 700; font-family: var(--font-body); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
+.brain-fab .brain-fab-badge.hidden { display: none; }
+.brain-popup { position: fixed; bottom: 148px; right: 24px; width: 380px; max-width: calc(100vw - 32px); max-height: calc(100vh - 180px); background: #fff; border-radius: 14px; box-shadow: 0 20px 50px rgba(0,0,0,0.25); z-index: 240; display: none; flex-direction: column; overflow: hidden; border: 1px solid var(--border); }
+.brain-popup.open { display: flex; animation: brainPopIn 0.22s cubic-bezier(0.34, 1.56, 0.64, 1); }
+@keyframes brainPopIn { from { opacity: 0; transform: translateY(12px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.brain-popup-header { padding: 14px 16px 10px; border-bottom: 1px solid var(--surface); display: flex; align-items: center; justify-content: space-between; }
+.brain-popup-title { font-family: var(--font-display); font-size: 16px; font-weight: 400; color: var(--text); letter-spacing: -0.01em; }
+.brain-popup-sub { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+.brain-popup-close { background: none; border: none; cursor: pointer; font-size: 20px; color: #a8a29e; padding: 4px 8px; border-radius: 6px; }
+.brain-popup-close:hover { background: var(--surface); color: var(--text); }
+.brain-popup-body { padding: 12px 14px 14px; overflow-y: auto; }
+.brain-legend { margin-top: 10px; display: flex; flex-direction: column; gap: 2px; }
+.brain-legend-row { display: grid; grid-template-columns: 12px 1fr auto 38px; align-items: center; gap: 8px; padding: 5px 6px; border-radius: 5px; }
+.brain-legend-row:hover { background: var(--bg-alt); }
+.brain-legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+.brain-legend-name { font-size: 11px; font-weight: 600; color: var(--text); font-family: var(--font-body); line-height: 1.2; }
+.brain-legend-abbr { font-size: 9px; color: var(--text-muted); font-family: var(--font-body); margin-top: 1px; }
+.brain-legend-dir { font-size: 10px; font-weight: 600; font-family: var(--font-body); white-space: nowrap; }
+.brain-legend-pct { text-align: right; font-family: var(--font-body); font-size: 11px; font-weight: 700; color: var(--text-muted); }
+.brain-colormap { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 8px; padding: 6px 8px; background: var(--bg-alt); border-radius: 6px; font-size: 9px; color: var(--text-muted); font-family: var(--font-body); font-weight: 600; }
+.brain-colormap-row { display: flex; align-items: center; gap: 5px; }
+.brain-colormap-swatch { width: 28px; height: 6px; border-radius: 3px; display: inline-block; }
+.brain-disclaimer { margin-top: 12px; padding: 8px 10px; background: #fef3c7; border-left: 3px solid #f59e0b; border-radius: 4px; font-size: 10px; line-height: 1.45; color: #78350f; }
+.brain-empty { padding: 28px 12px; text-align: center; font-size: 11px; color: var(--text-muted); }
+.brain-contribs { margin-top: 10px; }
+.brain-contribs details { font-size: 10px; }
+.brain-contribs summary { cursor: pointer; color: var(--text-muted); padding: 4px 6px; font-weight: 600; }
+.brain-contribs .contrib-list { padding: 4px 8px 8px; }
+.brain-contribs .contrib-row { display: flex; justify-content: space-between; padding: 2px 0; color: var(--text-muted); font-family: var(--font-body); }
+.brain-contribs .contrib-dim { font-weight: 600; }
+@media (max-width: 720px) {
+  .brain-fab { bottom: 88px; right: 16px; width: 48px; height: 48px; font-size: 22px; }
+  .brain-popup { bottom: 148px; right: 16px; left: 16px; width: auto; }
+}
+
+/* OUTCOMES Capa 2 — cards compactas con depth */
+.outcomes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px;
+}
+.outcome-card {
+  background: linear-gradient(145deg, #ffffff, var(--bg-alt));
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 9px 11px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.2s ease, transform 0.15s var(--ease-out);
+}
+.outcome-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+.outcome-card.status-red {
+  border-color: rgba(181,38,26,0.35);
+  background: linear-gradient(145deg, var(--red-soft), rgba(181,38,26,0.02));
+  box-shadow: var(--shadow), 0 0 0 1px rgba(181,38,26,0.08);
+}
+.outcome-card.status-yellow {
+  border-color: rgba(194,102,13,0.35);
+  background: linear-gradient(145deg, var(--orange-soft), rgba(194,102,13,0.02));
+  box-shadow: var(--shadow), 0 0 0 1px rgba(194,102,13,0.08);
+}
+.outcome-card.status-green {
+  border-color: rgba(47,158,68,0.32);
+  background: linear-gradient(145deg, var(--green-soft), rgba(47,158,68,0.01));
+}
+.outcome-card.status-muted { opacity: 0.72; }
+.outcome-head { display: flex; align-items: center; gap: 8px; }
+.outcome-head .o-title {
+  font-family: var(--font-display);
+  font-size: 14px;
+  letter-spacing: -0.005em;
+  flex: 1;
+  color: var(--text);
+  line-height: 1.15;
+}
+.outcome-head .o-badge {
+  font-size: 8.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px 7px;
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.outcome-card.status-red .o-badge {
+  background: linear-gradient(135deg, #b5261a, #d13222);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 1px 4px rgba(181,38,26,0.24);
+}
+.outcome-card.status-yellow .o-badge {
+  background: linear-gradient(135deg, #b85c0a, #c2660d);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 1px 4px rgba(194,102,13,0.24);
+}
+.outcome-card.status-green .o-badge {
+  background: linear-gradient(135deg, #27893a, #2f9e44);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 1px 4px rgba(47,158,68,0.24);
+}
+.outcome-card .o-summary { font-size: 11px; color: var(--text); line-height: 1.4; }
+.outcome-card .o-signals {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 1px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(228,225,220,0.8);
+  font-size: 10.5px;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+.outcome-card .o-signals .sig { padding-left: 14px; position: relative; }
+.outcome-card .o-signals .sig:before {
+  content: '–';
+  position: absolute;
+  left: 3px;
+  top: 0;
+  font-weight: 500;
+  color: var(--text-subtle);
+}
+.outcome-card .o-signals b { color: var(--text); font-weight: 600; }
+
+/* HITOP grid */
+.hitop-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 14px;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+.hitop-legend .lg-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; vertical-align: middle; margin-right: 5px; }
+.hitop-row { display: flex; gap: 6px; margin-bottom: 14px; align-items: stretch; }
+.hitop-row:last-child { margin-bottom: 0; }
+.hitop-group { display: flex; flex-direction: column; min-width: 0; }
+.hitop-group-head {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 4px 6px;
+  text-align: center;
+  border-radius: 4px 4px 0 0;
+  border-bottom: 2px solid;
+  margin-bottom: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.hitop-subs { display: flex; gap: 4px; flex: 1; }
+.hitop-sub {
+  flex: 1;
+  min-width: 0;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 7px 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+}
+.hitop-sub.signal { background: #fffbeb; border-color: var(--orange); }
+.hitop-sub.extreme { background: #fef2f2; border-color: var(--red); }
+.hitop-sub-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+  width: 100%;
+}
+.hitop-sub-head .sub-dot { width: 8px; height: 8px; border-radius: 50%; background: #a8a29e; }
+.hitop-sub.signal .sub-dot { background: var(--orange); }
+.hitop-sub.extreme .sub-dot { background: var(--red); box-shadow: 0 0 0 3px rgba(181,38,26,0.2); }
+.hitop-sub-head .sub-name { font-size: 10.5px; font-weight: 600; color: var(--text); text-align: center; line-height: 1.2; word-break: break-word; }
+.hitop-feeders { display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; }
+.hitop-feeder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: 700;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-size: 9.5px;
+  line-height: 1.1;
+  min-width: 32px;
+  color: var(--text-muted);
+  cursor: help;
+}
+.hitop-feeder.signal { background: var(--orange); color: #fff; border-color: var(--orange); }
+.hitop-feeder.extreme { background: var(--red); color: #fff; border-color: var(--red); }
+.hitop-feeder.ne { opacity: 0.55; }
+.hitop-feeder .feeder-nivel { font-size: 7.5px; font-weight: 500; line-height: 1; margin-top: 1px; opacity: 0.85; padding: 0 1px; text-align: center; word-break: break-word; }
+
+.profile-stub {
+  padding: 64px 0 48px;
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.profile-stub h2 {
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 400;
+  margin-bottom: 14px;
+  color: var(--text);
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+}
+.profile-stub p {
+  margin-bottom: 28px;
+  color: var(--text-muted);
+  font-size: 13.5px;
+  line-height: 1.65;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.profile-stub .cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 11px 26px;
+  background: var(--azul-grad-subtle);
+  color: #fff;
+  text-decoration: none;
+  border-radius: var(--r-pill);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.2s var(--ease-out);
+  box-shadow: 0 2px 8px rgba(30,58,138,0.28), 0 1px 3px rgba(30,58,138,0.16);
+  border: none;
+  cursor: pointer;
+}
+.profile-stub .cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(30,58,138,0.32), 0 2px 6px rgba(30,58,138,0.18);
+}
+.profile-stub .cta:active { transform: translateY(0); }
+
+.score-summary {
+  margin-top: 36px;
+  text-align: left;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 8px;
+  padding: 0 2px;
+}
+.summary-card {
+  background: linear-gradient(to right, #ffffff, var(--bg-alt));
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 9px 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  box-shadow: var(--shadow-xs);
+  transition: box-shadow 0.15s ease;
+}
+.summary-card:hover { box-shadow: var(--shadow); }
+.summary-card .sc-title { color: var(--text); font-weight: 500; }
+.summary-card .sc-val {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 14.5px;
+  padding: 2px 10px;
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  color: var(--text-muted);
+  min-width: 38px;
+  text-align: center;
+  border: 1px solid var(--border);
+}
+.summary-card .sc-val.neg {
+  background: var(--red-soft);
+  color: var(--red);
+  border-color: rgba(181,38,26,0.18);
+}
+.summary-card .sc-val.pos {
+  background: var(--teal-soft);
+  color: var(--teal);
+  border-color: var(--teal-border);
+}
+.summary-card .sc-val.ne { background: var(--surface); color: var(--text-subtle); opacity: 0.75; }
+
+/* FOOTER — refinado */
+footer {
+  padding: 18px 28px 24px;
+  border-top: 1px solid var(--border);
+  font-size: 10px;
+  color: var(--text-subtle);
+  text-align: center;
+  background: linear-gradient(to bottom, var(--bg), var(--bg-alt));
+  letter-spacing: 0.02em;
+}
+footer strong { color: var(--text-muted); font-weight: 600; }
+footer a { color: var(--gold); font-weight: 600; text-decoration: none; letter-spacing: 0.01em; }
+footer a:hover { text-decoration: underline; color: #a07618; }
+
+/* SCORE TOOLTIP — premium popup */
+#scoreTooltip {
+  position: fixed;
+  z-index: 200;
+  background: rgba(255,255,255,0.97);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--text);
+  padding: 13px 15px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-xl);
+  font-family: var(--font-body);
+  font-size: 12px;
+  line-height: 1.5;
+  max-width: 390px;
+  min-width: 270px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(5px) scale(0.98);
+  transition: opacity 0.15s var(--ease-out), transform 0.15s var(--ease-out);
+  display: none;
+}
+#scoreTooltip.visible { display: block; opacity: 1; transform: translateY(0) scale(1); }
+#scoreTooltip .tt-head {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+}
+#scoreTooltip .tt-num {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  color: #fff;
+  flex: 0 0 auto;
+}
+#scoreTooltip .tt-num[data-val="-2"] { background: var(--red); }
+#scoreTooltip .tt-num[data-val="-1"] { background: var(--orange); }
+#scoreTooltip .tt-num[data-val="0"]  { background: var(--gray); }
+#scoreTooltip .tt-num[data-val="+1"], #scoreTooltip .tt-num[data-val="1"] { background: var(--teal); }
+#scoreTooltip .tt-num[data-val="+2"], #scoreTooltip .tt-num[data-val="2"] { background: var(--azul); }
+#scoreTooltip .tt-num[data-val="3"] { background: #6f2d97; }
+#scoreTooltip .tt-num[data-val="4"] { background: var(--red); }
+#scoreTooltip .tt-row { margin-bottom: 6px; display: flex; gap: 8px; align-items: baseline; }
+#scoreTooltip .tt-row:last-child { margin-bottom: 0; }
+#scoreTooltip .tt-label {
+  flex: 0 0 38px;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding-top: 2px;
+}
+#scoreTooltip .tt-val { flex: 1; font-size: 12px; color: var(--text); }
+#scoreTooltip .tt-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+#scoreTooltip .tt-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  padding: 1px 7px 2px;
+  border-radius: 999px;
+  background: var(--teal-soft);
+  border: 1px solid var(--teal-border);
+  font-size: 10.5px;
+  line-height: 1.3;
+}
+#scoreTooltip .tt-chip b { color: var(--teal); font-weight: 700; font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.04em; }
+#scoreTooltip .tt-ct {
+  margin-top: 8px;
+  background: var(--teal-soft);
+  border-radius: 4px;
+  padding: 5px 9px;
+  font-size: 11.5px;
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+}
+#scoreTooltip .tt-ct-label {
+  font-weight: 700;
+  color: var(--teal);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex: 0 0 auto;
+}
+.s-btn { cursor: help; }
+
+/* ══════════════════════════════════════════════════════
+   MOBILE — 720px y menor (touch-first, guardia médica)
+   Todos los cambios son ADDITIVE — desktop no se toca.
+   ══════════════════════════════════════════════════════ */
+@media (max-width: 720px) {
+
+  /* ── Header compacto ── */
+  header {
+    padding: 10px 14px;
+    gap: 8px;
+    /* Stack: brand|progress arriba, tabs abajo */
+    flex-wrap: wrap;
+  }
+  .brand .mark { font-size: 22px; }
+  .brand .sub { display: none; }  /* ahorra espacio en header */
+  .progress { font-size: 10px; }
+  .progress .bar { width: 100px; }
+  /* Tabs: ocupan su propia fila, centrados */
+  .tabs { margin-left: 0; width: 100%; justify-content: center; }
+  /* Tab buttons: touch target ≥44px */
+  .tab-btn {
+    padding: 10px 28px;
+    font-size: 12px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* ── Main: sin margen extra ── */
+  main { padding: 10px 12px 120px; }
+  /* extra bottom padding para que el bottom bar no tape contenido */
+
+  /* ── Section nav: scroll horizontal, no wrap ── */
+  .section-nav {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 6px 12px 7px;
+    margin: -10px -12px 10px;
+    gap: 5px;
+  }
+  .section-nav::-webkit-scrollbar { display: none; }
+  /* Nav chips: touch target mínimo 44px alto, text legible */
+  .section-nav .nav-chip {
+    padding: 10px 12px;
+    font-size: 11px;
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  /* Nav help (keyboard hints): ocultar en mobile — no hay teclado */
+  .section-nav .nav-help { display: none; }
+  /* Sweep y collapse-all: mínimo 44px, al final del scroll */
+  .section-nav .nav-sweep {
+    min-height: 44px;
+    padding: 10px 14px;
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+
+  /* ── Dim row: stack vertical ── */
+  .dim-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 12px 10px;
+  }
+  .section-grid.pack-2 > .dim-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  /* ── Dim name: texto legible ── */
+  .dim-name .title { font-size: 15px; white-space: normal; }
+  .dim-name .code { font-size: 10px; }
+
+  /* ── Score buttons: touch targets ≥44px ── */
+  .s-btn {
+    padding: 10px 12px;
+    min-height: 44px;
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .s-btn .num { font-size: 13px; }
+  .s-btn .lbl { font-size: 12px; }
+  .s-btn .anchor {
+    font-size: 11px;
+    /* en mobile limitamos el anchor para no crear pills enormes */
+    max-width: 180px;
+  }
+  .s-btn.ne-btn { padding: 10px 10px; min-height: 44px; }
+  /* Dim scores: wrap libre, gap más grande para facilitar tap */
+  .dim-scores { gap: 6px; }
+
+  /* ── Multitest y two-axis sub-rows ── */
+  .mt-row, .ax-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 4px 0;
+  }
+  .mt-row .mt-label { font-size: 13px; font-weight: 600; color: var(--text); }
+  .ax-row .ax-label { font-size: 11px; }
+
+  /* ── Section head: legible y tappable ── */
+  .section-head { font-size: 16px; padding: 8px 0; }
+  .section-head .sec-collapse {
+    padding: 8px 12px;
+    min-height: 36px;
+    font-size: 10px;
+  }
+
+  /* ── Profile: outcomes stack a 1 columna ── */
+  .outcomes-grid { grid-template-columns: 1fr; }
+  .outcome-card { padding: 12px 14px; }
+  .outcome-head .o-title { font-size: 15px; }
+
+  /* ── HiTOP: scroll horizontal controlado ── */
+  .hitop-row {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+    padding-bottom: 8px; /* espacio para scrollbar si aparece */
+  }
+  /* Grupos HiTOP: ancho mínimo para que los sub-cols sean legibles */
+  .hitop-group { min-width: 120px; }
+  .hitop-group-head { font-size: 8.5px; padding: 3px 4px; }
+  .hitop-sub-head .sub-name { font-size: 9.5px; }
+  .hitop-feeder { min-width: 28px; font-size: 9px; }
+  .hitop-feeders { gap: 2px; }
+
+  /* ── Score summary cards: 1 columna ── */
+  .score-summary { grid-template-columns: 1fr; }
+
+  /* ── Profile stub CTA: tappable ── */
+  .profile-stub .cta { padding: 14px 28px; min-height: 44px; }
+
+  /* ── Footer: más compacto ── */
+  footer { padding: 12px 14px 16px; font-size: 9px; }
+
+} /* fin @media 720px */
+
+/* ── BOTTOM ACTION BAR (mobile only) ──
+   Reemplaza keyboard shortcuts S y T para contexto touch.
+   Aparece solo en mobile. Fijo al fondo del viewport.
+   ── */
+@media (max-width: 720px) {
+  #mobileActionBar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.94);
+    backdrop-filter: blur(14px) saturate(1.5);
+    -webkit-backdrop-filter: blur(14px) saturate(1.5);
+    border-top: 1px solid var(--border);
+    padding: 10px 12px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+    gap: 8px;
+    box-shadow: 0 -2px 16px rgba(24,22,15,0.10), 0 -1px 4px rgba(24,22,15,0.05);
+  }
+  #mobileActionBar .mob-btn {
+    flex: 1;
+    min-height: 48px;
+    border-radius: var(--r-md);
+    border: none;
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.15s var(--ease-out);
+    -webkit-tap-highlight-color: transparent;
+  }
+  #mobileActionBar .mob-sweep {
+    background: var(--azul-grad-subtle);
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(30,58,138,0.24);
+  }
+  #mobileActionBar .mob-sweep:active { transform: scale(0.96); opacity: 0.9; }
+  #mobileActionBar .mob-profile {
+    background: var(--teal-soft);
+    color: var(--teal-bright);
+    border: 1px solid var(--teal-border);
+  }
+  #mobileActionBar .mob-profile:active { background: var(--teal-bright); color: #fff; }
+  #mobileActionBar .mob-reset {
+    flex: 0 0 48px;
+    background: var(--surface);
+    color: var(--text-muted);
+    font-size: 18px;
+    font-weight: 400;
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+  }
+  #mobileActionBar .mob-reset:active { background: var(--red-soft); color: var(--red); }
+}
+/* En desktop el action bar no existe */
+@media (min-width: 721px) {
+  #mobileActionBar { display: none; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="mark">bMSE</div>
+    <div class="sub">Brief Mental State Examination</div>
+  </div>
+  <div class="progress">
+    <span id="progressText">0 / 0</span>
+    <div class="bar"><div class="fill" id="progressFill"></div></div>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn active" data-view="score" onclick="showView('score')">Puntuar</button>
+    <button class="tab-btn" data-view="profile" onclick="showView('profile')">Perfil</button>
+  </div>
+</header>
+
+<main>
+  <div id="scoreView"></div>
+  <div id="profileView" style="display:none"></div>
+</main>
+
+<!-- RADAR TOOLTIP (compartido por todos los radars) -->
+<div id="radarTip" style="display:none;position:fixed;z-index:300;background:#1c1917;color:#fff;padding:8px 12px;border-radius:6px;font-size:11px;line-height:1.5;font-family:'DM Sans',sans-serif;max-width:260px;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,0.2)"></div>
+
+<!-- ── BRAIN INFERENCE WIDGET (floating, real-time) ── -->
+<button class="brain-fab" id="brainFab" onclick="toggleBrainPopup()" title="Brain Inference">
+  🧠
+  <span class="brain-fab-badge hidden" id="brainFabBadge">0</span>
+</button>
+<div class="brain-popup" id="brainPopup" role="dialog" aria-labelledby="brainPopupTitle">
+  <div class="brain-popup-header">
+    <div>
+      <div class="brain-popup-title" id="brainPopupTitle">Brain Inference</div>
+      <div class="brain-popup-sub">Hipótesis · No medición</div>
+    </div>
+    <button class="brain-popup-close" onclick="toggleBrainPopup()" aria-label="Cerrar">&times;</button>
+  </div>
+  <div class="brain-popup-body" id="brainWidgetBody">
+    <div class="brain-empty">Comience a puntuar dimensiones. La inferencia se activa al primer score.</div>
+  </div>
+</div>
+
+<footer>
+  Hecho para <strong>Yachay</strong>. Colaboración del
+  <a href="https://www.instagram.com/psiquiatrahuarcaya" target="_blank">Dr. Jeff Huarcaya-Victoria</a> y
+  <a href="https://www.instagram.com/jaflo.md" target="_blank">Dr. Javier Flores-Cohaila</a>
+</footer>
+
+<!-- BOTTOM ACTION BAR: solo visible en mobile (CSS lo oculta en desktop) -->
+<div id="mobileActionBar">
+  <button class="mob-btn mob-sweep" id="mobSweepBtn" onclick="mobileSweepAction()">Marcar normales</button>
+  <button class="mob-btn mob-profile" onclick="showView('profile')" id="mobProfileBtn">Ver perfil</button>
+  <button class="mob-btn mob-reset" onclick="mobileResetConfirm()" title="Limpiar todo">↺</button>
+</div>
+
+<script src="bmse-data.js"></script>
+<script>
+const SECTION_MAP = {
+  'NC.conciencia':'Gate · Conciencia',
+  'F1.expresividad':'Expresividad',
+  'F2.velocidad':'Psicomotricidad','F2.sensorial':'Psicomotricidad',
+  'F5.regulación':'Atención',
+  'F3.drive':'Hedónico · Motivacional','F3.anticipación':'Hedónico · Motivacional','F3.tono':'Hedónico · Motivacional',
+  'F4.experiencia':'Pensamiento','F4.contenido':'Pensamiento',
+  'F6.amenaza':'Valencia negativa','F6.frustración':'Valencia negativa','F6.animo-meta':'Valencia negativa','F6.autoevaluación':'Valencia negativa','F6.desesperanza':'Valencia negativa',
+  'F7.testing':'Mentalización','F7.auto-mentalización':'Mentalización','F7.mentalización-otro':'Mentalización',
+  'G.arousal':'Global','G.coherencia':'Global','G.sueno-ritmo':'Global','G.interocepcion':'Global',
+  'META.enfermedad':'Neurocognitivo · Motor · Meta',
+  'FUN.funcionalidad':'Neurocognitivo · Motor · Meta',
+  'NC.perfil':'Neurocognitivo · Motor · Meta',
+  'NM.coordinación':'Neurocognitivo · Motor · Meta',
+  'P':'Interpersonal',
+  'EXT.inputs':'Inputs externos (Capa 2)'
+};
+
+// ── STATE (shared con v2 via localStorage 'bmse_state_v2') ──
+function defaultState() {
+  const s = {};
+  DIMS.forEach(d => {
+    if (d.type === 'two_axis') {
+      d.axes.forEach(a => { s[a.id] = {score: null}; });
+      s[d.id] = {score:null, specifiers:{}};
+    } else {
+      s[d.id] = {score: null, specifiers: {}};
+    }
+  });
+  s._timerStart = Date.now();
+  return s;
+}
+function loadState() {
+  try {
+    const saved = localStorage.getItem('bmse_state_v2');
+    if (saved) return JSON.parse(saved);
+  } catch (e) {}
+  return defaultState();
+}
+function saveState() {
+  localStorage.setItem('bmse_state_v2', JSON.stringify(state));
+}
+let state = loadState();
+
+// Apply canonical order
+(function applyOrder() {
+  const dimMap = {};
+  DIMS.forEach(d => dimMap[d.id] = d);
+  const ORDERED = DIM_ORDER.map(id => dimMap[id]).filter(Boolean);
+  if (ORDERED.length === DIMS.length) {
+    DIMS.length = 0;
+    ORDERED.forEach(d => DIMS.push(d));
+  }
+})();
+
+// ── HELPERS ──
+function shortLabel(s, max) {
+  if (!s) return '';
+  max = max || 18;
+  return s.length > max ? s.slice(0, max - 1).trim() + '…' : s;
+}
+function shortAnchor(text, max) {
+  if (!text) return '';
+  max = max || 90;
+  const firstSentence = text.split(/[.!?](?:\s|$)/)[0].trim();
+  const base = firstSentence.length >= 20 ? firstSentence : text;
+  return base.length > max ? base.slice(0, max - 1).trim() + '…' : base;
+}
+function escapeAttr(s) { return (s || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+function fmtScore(v) {
+  if (v === 'NE') return 'NE';
+  if (v === null || v === undefined) return '—';
+  const n = parseInt(v, 10);
+  if (Number.isNaN(n)) return String(v);
+  return n > 0 ? '+' + n : String(n);
+}
+
+// ── RENDER: SCORE VIEW ──
+// Short labels for section-nav chips (C5)
+const SECTION_SHORT = {
+  'Gate · Conciencia':'Gate',
+  'Expresividad':'Expr',
+  'Psicomotricidad':'Psicom',
+  'Atención':'Aten',
+  'Hedónico · Motivacional':'Hedón',
+  'Pensamiento':'Pens',
+  'Valencia negativa':'Val−',
+  'Mentalización':'Ment',
+  'Global':'Global',
+  'Neurocognitivo · Motor · Meta':'Neuro/Mot',
+  'Interpersonal':'Interp',
+  'Inputs externos (Capa 2)':'Inputs'
+};
+function slugSec(s) { return 'sec_' + (s || '').replace(/[^a-z0-9]+/gi,'_'); }
+
+function renderScoreView() {
+  const c = document.getElementById('scoreView');
+  // Group dims by section preserving order
+  const grouped = {};
+  const order = [];
+  DIMS.forEach((d, idx) => {
+    const sec = SECTION_MAP[d.id] || d.code;
+    if (!grouped[sec]) { grouped[sec] = []; order.push(sec); }
+    grouped[sec].push({ d, idx });
+  });
+
+  // Build sticky section-nav strip (C5) + keyboard hint (C2) + sweep button (C1)
+  let nav = '<nav class="section-nav" id="sectionNav">';
+  order.forEach(sec => {
+    const items = grouped[sec];
+    const scoredCount = items.filter(it => isDimScored(it.d)).length;
+    const completeCls = scoredCount === items.length ? 'complete' : '';
+    const short = SECTION_SHORT[sec] || sec;
+    nav += `<a class="nav-chip ${completeCls}" href="#${slugSec(sec)}" data-sec="${escapeAttr(sec)}">${short}<span class="nav-count">${scoredCount}/${items.length}</span></a>`;
+  });
+  nav += `<button class="nav-sweep" id="sweepBtn" onclick="sweepDefaults()" title="Marca todas las dimensiones bipolares no puntuadas como 0 (normal). Las marcadas como tentativas (—) se mostrarán con borde punteado hasta que las confirmes con un click.">Marcar normales</button>`;
+  nav += `<button class="nav-sweep nav-collapse-all" id="collapseAllBtn" onclick="collapseCompleteSections()" title="Colapsa todas las secciones ya completas para reducir scroll" style="background:var(--teal);display:none">Colapsar completas</button>`;
+  nav += `<button class="nav-sweep nav-expand-all" id="expandAllBtn" onclick="expandAllSections()" title="Expande todas las secciones colapsadas" style="background:var(--bg);color:var(--azul);border:1px solid var(--azul-border);display:none">Expandir todas</button>`;
+  nav += `<button class="nav-sweep nav-new" onclick="newRegistro()" title="Limpia toda la evaluación actual y empieza un nuevo registro (nuevo paciente)" style="background:var(--bg);color:var(--red);border:1px solid var(--red-soft, rgba(181,38,26,0.3))">+ Nuevo registro</button>`;
+  nav += `<span class="nav-help">Teclas: <kbd>←</kbd><kbd>→</kbd> dim · <kbd>1</kbd>–<kbd>5</kbd> score · <kbd>0</kbd> NE · <kbd>S</kbd> sweep · <kbd>T</kbd> confirmar tent.</span>`;
+  nav += '</nav>';
+
+  let html = nav;
+  order.forEach(sec => {
+    const items = grouped[sec];
+    const scoredCount = items.filter(it => isDimScored(it.d)).length;
+    // Pack only if section has ≥3 simple bipolar/gate/conviction/profile dims (no multitests/two_axis)
+    const simpleCount = items.filter(it => it.d.type !== 'multitest' && it.d.type !== 'two_axis').length;
+    const packCls = (simpleCount >= 3 && simpleCount === items.length) ? 'pack-2' : '';
+    const gridId = 'grid_' + slugSec(sec);
+    const isComplete = scoredCount === items.length && items.length > 0;
+    const completeCls2 = isComplete ? 'sec-complete' : '';
+    html += `<div class="section-head ${completeCls2}" id="${slugSec(sec)}" data-grid="${gridId}"><span>${sec}</span><span class="count">${scoredCount}/${items.length}</span><button class="sec-collapse" onclick="toggleSection('${gridId}',this)" title="Colapsar/expandir sección completa">&#9650; Colapsar</button></div>`;
+    html += `<div class="section-grid ${packCls}" id="${gridId}">`;
+    items.forEach(it => html += renderDimRow(it.d));
+    html += `</div>`;
+  });
+  c.innerHTML = html;
+  updateProgress();
+  // Focus first unscored dim for keyboard nav (C2)
+  setTimeout(() => { setKbdFocus(findNextUnscored(-1)); }, 50);
+}
+
+function isDimScored(d) {
+  if (d.type === 'multitest') {
+    return d.tests.every(t => state[t.id] && state[t.id].score !== null && state[t.id].score !== undefined);
+  }
+  if (d.type === 'two_axis') {
+    return d.axes.every(a => state[a.id] && state[a.id].score !== null && state[a.id].score !== undefined);
+  }
+  return state[d.id] && state[d.id].score !== null && state[d.id].score !== undefined;
+}
+
+// In-memory tentative-default map (NOT persisted; state shape preserved — C1)
+const tentative = {};
+function isTentative(id) { return tentative[id] === true; }
+function markTentative(id) { tentative[id] = true; }
+function clearTentative(id) { delete tentative[id]; }
+
+function renderDimRow(d) {
+  if (d.type === 'multitest') return renderMultitestRow(d);
+  if (d.type === 'two_axis') return renderTwoAxisRow(d);
+  const cur = state[d.id]?.score;
+  const tent = isTentative(d.id);
+  const scoredCls = (cur !== null && cur !== undefined && !tent) ? 'scored' : '';
+  const tentCls = tent ? 'tentative-only' : '';
+  return `<div class="dim-row ${scoredCls} ${tentCls}" id="row_${d.id}" data-dim-id="${d.id}">
+    <div class="dim-name"><div class="code">${d.code}</div><div class="title">${d.title}</div></div>
+    <div class="dim-scores">${renderButtonGroup(d, cur, (k) => `setScore('${d.id}','${k}',this)`, { tentative: tent })}</div>
+  </div>`;
+}
+
+function renderButtonGroup(d, cur, handlerFn, opts) {
+  const bipolarOrder = ['-2','-1','0','+1','+2'];
+  const convictionOrder = ['0','1','2','3','4'];
+  const profileOrder = ['0','-1','-2'];
+  let keys;
+  if (d.type === 'bipolar' || d.type === 'gate') keys = bipolarOrder.filter(k => k in d.scores);
+  else if (d.type === 'conviction') keys = convictionOrder.filter(k => k in d.scores);
+  else if (d.type === 'profile') keys = profileOrder.filter(k => k in d.scores);
+  else keys = Object.keys(d.scores);
+  const detailsSource = (opts && opts.details) ? opts.details : d.details;
+  let html = '';
+  const isTent = !!(opts && opts.tentative);
+  keys.forEach(k => {
+    const isSel = cur !== null && String(cur) === String(k);
+    let sel = isSel ? 'selected' : '';
+    if (isSel && isTent) sel += ' tentative';
+    const label = d.scores[k] || '';
+    const det = detailsSource ? detailsSource[k] : null;
+    const anchor = det ? shortAnchor(det.loQueVes) : '';
+    const tip = det && det.loQueVes ? det.loQueVes : '';
+    html += `<button class="s-btn ${sel}" data-val="${k}" title="${escapeAttr(tip)}" onclick="${handlerFn(k)}">`;
+    html += `<span class="num">${k}</span>`;
+    if (label) html += `<span class="lbl">${shortLabel(label)}</span>`;
+    if (anchor) html += `<span class="anchor">${anchor}</span>`;
+    html += `</button>`;
+  });
+  const neSel = cur === 'NE' ? 'selected' : '';
+  html += `<button class="s-btn ne-btn ${neSel}" data-val="NE" onclick="${handlerFn('NE')}"><span class="num">NE</span><span class="lbl">No eval.</span></button>`;
+  return html;
+}
+
+function renderMultitestRow(d) {
+  let inner = `<div class="mt-stack">`;
+  d.tests.forEach(test => {
+    if (!state[test.id]) state[test.id] = { score: null, specifiers: {} };
+    const cur = state[test.id]?.score;
+    const scoreKeys = test.scoreKeys || ['0','-1','-2'];
+    // Stack vertical sólo si: keys numéricas bipolares (no categóricas) Y algún label >45 chars.
+    // Categóricas (NO/SI/VAGO/etc.) → siempre inline horizontal.
+    // FUN/META/PSP (numérico + labels largos) → stack vertical.
+    // NM/NC (numérico + labels cortos) → inline.
+    // EXT.inputs (categórico) → inline siempre, sin importar longitud.
+    const isCategorical = scoreKeys.some(k => !/^[-+]?\d+$/.test(k));
+    const useAnchor = !isCategorical && scoreKeys.some(k => (test.scores[k] || '').length > 45);
+    let buttons = '';
+    scoreKeys.forEach(k => {
+      const sel = cur !== null && String(cur) === String(k) ? 'selected' : '';
+      const label = test.scores[k] || '';
+      buttons += `<button class="s-btn ${sel}" data-val="${k}" title="${escapeAttr(label)}" onclick="setTestScore('${test.id}','${k}',this)">`;
+      buttons += `<span class="num">${k}</span>`;
+      if (label) {
+        if (useAnchor) buttons += `<span class="anchor">${label}</span>`;
+        else buttons += `<span class="lbl">${shortLabel(label, 22)}</span>`;
+      }
+      buttons += `</button>`;
+    });
+    const neSel = cur === 'NE' ? 'selected' : '';
+    buttons += `<button class="s-btn ne-btn ${neSel}" data-val="NE" onclick="setTestScore('${test.id}','NE',this)"><span class="num">NE</span><span class="lbl">No eval.</span></button>`;
+    inner += `<div class="mt-row"><div class="mt-label">${test.label}</div><div class="dim-scores">${buttons}</div></div>`;
+  });
+  inner += `</div>`;
+  const scoredCls = isDimScored(d) ? 'scored' : '';
+  return `<div class="dim-row multitest ${scoredCls}" id="row_${d.id}">
+    <div class="dim-name"><div class="code">${d.code}</div><div class="title">${d.title}</div><span class="mt-enter-hint"><kbd>Enter</kbd> puntuar</span></div>
+    ${inner}
+  </div>`;
+}
+
+function renderTwoAxisRow(d) {
+  let inner = `<div class="ax-stack">`;
+  d.axes.forEach((ax, ai) => {
+    const cur = state[ax.id]?.score;
+    const keys = ['-2','-1','0','+1','+2'];
+    const detSource = ai === 0 ? d.details_p1 : d.details_p2;
+    let buttons = '';
+    keys.forEach(k => {
+      const sel = cur !== null && String(cur) === String(k) ? 'selected' : '';
+      const label = ax.scores[k] || '';
+      const det = detSource ? detSource[k] : null;
+      const anchor = det ? shortAnchor(det.loQueVes) : '';
+      const tip = det && det.loQueVes ? det.loQueVes : '';
+      buttons += `<button class="s-btn ${sel}" data-val="${k}" title="${escapeAttr(tip)}" onclick="setAxisScore('${ax.id}','${k}',this,${ai})">`;
+      buttons += `<span class="num">${k}</span>`;
+      if (label) buttons += `<span class="lbl">${shortLabel(label)}</span>`;
+      if (anchor) buttons += `<span class="anchor">${anchor}</span>`;
+      buttons += `</button>`;
+    });
+    const neSel = cur === 'NE' ? 'selected' : '';
+    buttons += `<button class="s-btn ne-btn ${neSel}" data-val="NE" onclick="setAxisScore('${ax.id}','NE',this,${ai})"><span class="num">NE</span><span class="lbl">No eval.</span></button>`;
+    inner += `<div class="ax-row"><div class="ax-label">${ax.label}</div><div class="dim-scores">${buttons}</div></div>`;
+  });
+  inner += `</div>`;
+  const scoredCls = isDimScored(d) ? 'scored' : '';
+  return `<div class="dim-row two-axis ${scoredCls}" id="row_${d.id}">
+    <div class="dim-name"><div class="code">${d.code}</div><div class="title">${d.title}</div></div>
+    ${inner}
+  </div>`;
+}
+
+// ── SCORE ACTIONS ──
+function setScore(dimId, val, btn) {
+  if (!state[dimId]) state[dimId] = { score: null, specifiers: {} };
+  state[dimId].score = val;
+  clearTentative(dimId);                            // confirm tentative → real
+  const row = btn.closest('.dim-row');
+  row.classList.remove('tentative-only');
+  row.querySelectorAll('.dim-scores .s-btn').forEach(b => { b.classList.remove('selected'); b.classList.remove('tentative'); });
+  btn.classList.add('selected');
+  row.classList.add('scored');
+  saveState();
+  updateProgress();
+}
+
+// Sweep: mark all unscored simple bipolar/gate dims as tentative 0 (C1)
+function sweepDefaults() {
+  let touched = 0;
+  DIMS.forEach(d => {
+    if (d.type === 'multitest' || d.type === 'two_axis') return;
+    // Only sweep dims that support '0' key
+    if (!('0' in (d.scores || {}))) return;
+    const cur = state[d.id]?.score;
+    if (cur === null || cur === undefined) {
+      if (!state[d.id]) state[d.id] = { score: null, specifiers: {} };
+      state[d.id].score = '0';
+      markTentative(d.id);
+      touched++;
+    }
+  });
+  if (touched > 0) {
+    saveState();
+    renderScoreView();
+  }
+}
+
+// ── KEYBOARD NAVIGATION (C2) ──
+// Maps numeric keys to score values per dimension type
+const KEY_MAP_BIPOLAR  = { '1':'-2', '2':'-1', '3':'0', '4':'+1', '5':'+2', '0':'NE' };
+const KEY_MAP_PROFILE  = { '1':'-2', '2':'-1', '3':'0', '0':'NE' };
+const KEY_MAP_CONV     = { '1':'0', '2':'1', '3':'2', '4':'3', '5':'4', '0':'NE' };
+let kbdFocusIdx = -1;
+function findNextUnscored(fromIdx) {
+  for (let i = fromIdx + 1; i < DIMS.length; i++) {
+    const d = DIMS[i];
+    if (d.type === 'multitest' || d.type === 'two_axis') continue;
+    if (!isDimScored(d) || isTentative(d.id)) return i;
+  }
+  // wrap-around
+  for (let i = 0; i <= fromIdx && i < DIMS.length; i++) {
+    const d = DIMS[i];
+    if (d.type === 'multitest' || d.type === 'two_axis') continue;
+    if (!isDimScored(d) || isTentative(d.id)) return i;
+  }
+  return -1;
+}
+function setKbdFocus(idx) {
+  document.querySelectorAll('.dim-row.kbd-focus').forEach(r => r.classList.remove('kbd-focus'));
+  if (idx < 0 || idx >= DIMS.length) { kbdFocusIdx = -1; return; }
+  kbdFocusIdx = idx;
+  const d = DIMS[idx];
+  if (d.type === 'multitest' || d.type === 'two_axis') return;
+  const row = document.getElementById('row_' + d.id);
+  if (row) {
+    row.classList.add('kbd-focus');
+    row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+function kbdAdvance(delta) {
+  let start = kbdFocusIdx >= 0 ? kbdFocusIdx : -1;
+  let idx = start;
+  for (let step = 0; step < DIMS.length; step++) {
+    idx = (idx + delta + DIMS.length) % DIMS.length;
+    const d = DIMS[idx];
+    if (d.type === 'multitest' || d.type === 'two_axis') continue;
+    setKbdFocus(idx);
+    return;
+  }
+}
+// Multitest sub-navigation state
+let mtFocusDimIdx = -1;  // DIMS index of the focused multitest dim
+let mtFocusTestIdx = -1; // sub-test index within that dim
+
+function enterMtMode(dimIdx) {
+  const d = DIMS[dimIdx];
+  if (!d || d.type !== 'multitest') return;
+  mtFocusDimIdx = dimIdx;
+  mtFocusTestIdx = 0;
+  highlightMtRow();
+}
+function exitMtMode() {
+  clearMtHighlight();
+  mtFocusDimIdx = -1;
+  mtFocusTestIdx = -1;
+}
+function highlightMtRow() {
+  clearMtHighlight();
+  if (mtFocusDimIdx < 0) return;
+  const d = DIMS[mtFocusDimIdx];
+  const row = document.getElementById('row_' + d.id);
+  if (!row) return;
+  const mtRows = row.querySelectorAll('.mt-row');
+  if (mtRows[mtFocusTestIdx]) {
+    mtRows[mtFocusTestIdx].classList.add('mt-kbd-focus');
+    mtRows[mtFocusTestIdx].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+function clearMtHighlight() {
+  document.querySelectorAll('.mt-row.mt-kbd-focus').forEach(r => r.classList.remove('mt-kbd-focus'));
+}
+
+document.addEventListener('keydown', (e) => {
+  // Ignore when typing in inputs
+  if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+  // Only act when score view is visible
+  const scoreView = document.getElementById('scoreView');
+  if (!scoreView || scoreView.style.display === 'none') return;
+
+  // Global shortcuts (always available): S = sweep, T = confirm tentatives
+  if (e.key === 's' || e.key === 'S') {
+    e.preventDefault();
+    const sweepBtn = document.getElementById('sweepBtn');
+    if (sweepBtn && !sweepBtn.disabled) sweepBtn.click();
+    return;
+  }
+  if (e.key === 't' || e.key === 'T') {
+    e.preventDefault();
+    if (Object.keys(tentative).length > 0) confirmAllTentative();
+    return;
+  }
+
+  // ── MULTITEST sub-navigation mode ──
+  if (mtFocusDimIdx >= 0) {
+    const d = DIMS[mtFocusDimIdx];
+    if (!d || d.type !== 'multitest') { exitMtMode(); return; }
+    const tests = d.tests;
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      if (e.shiftKey) {
+        mtFocusTestIdx = (mtFocusTestIdx - 1 + tests.length) % tests.length;
+      } else {
+        mtFocusTestIdx = (mtFocusTestIdx + 1) % tests.length;
+      }
+      highlightMtRow();
+      return;
+    }
+    if (e.key === 'Escape' || e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      exitMtMode();
+      // On Escape stay on current dim; on Arrow advance
+      if (e.key !== 'Escape') { e.preventDefault(); kbdAdvance(1); }
+      return;
+    }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      exitMtMode();
+      e.preventDefault();
+      kbdAdvance(-1);
+      return;
+    }
+    // Score keys for sub-test: keys 1-5 mapped to available scoreKeys, 0 = NE
+    const test = tests[mtFocusTestIdx];
+    if (!test) return;
+    const scoreKeys = test.scoreKeys || Object.keys(test.scores || {});
+    const mtKeyMap = {};
+    scoreKeys.forEach((k, i) => { mtKeyMap[String(i + 1)] = k; });
+    mtKeyMap['0'] = 'NE';
+    if (e.key in mtKeyMap) {
+      e.preventDefault();
+      const val = mtKeyMap[e.key];
+      if (!state[test.id]) state[test.id] = { score: null, specifiers: {} };
+      state[test.id].score = val;
+      saveState();
+      // Re-render the dim row
+      const row = document.getElementById('row_' + d.id);
+      if (row) {
+        row.outerHTML = renderMultitestRow(d);
+      }
+      updateProgress();
+      // Advance to next sub-test or exit mt mode if done
+      const nextTestIdx = mtFocusTestIdx + 1;
+      if (nextTestIdx < tests.length) {
+        mtFocusTestIdx = nextTestIdx;
+        highlightMtRow();
+      } else {
+        exitMtMode();
+        const nxt = findNextUnscored(mtFocusDimIdx);
+        if (nxt >= 0) setKbdFocus(nxt);
+      }
+    }
+    return;
+  }
+
+  // ── Normal dim navigation ──
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); kbdAdvance(1); return; }
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   { e.preventDefault(); kbdAdvance(-1); return; }
+  if (e.key === 'Enter' || e.key === ' ') {
+    // If focused dim is a multitest, Enter activates mt mode
+    if (kbdFocusIdx >= 0) {
+      const d = DIMS[kbdFocusIdx];
+      if (d && d.type === 'multitest') {
+        e.preventDefault();
+        enterMtMode(kbdFocusIdx);
+        return;
+      }
+    }
+  }
+  if (kbdFocusIdx < 0) return;
+  const d = DIMS[kbdFocusIdx];
+  if (!d) return;
+  // If multitest, Enter activates mt mode (redundant safety)
+  if (d.type === 'multitest') {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); enterMtMode(kbdFocusIdx); }
+    return;
+  }
+  if (d.type === 'two_axis') return;
+  let map = KEY_MAP_BIPOLAR;
+  if (d.type === 'conviction') map = KEY_MAP_CONV;
+  else if (d.type === 'profile') map = KEY_MAP_PROFILE;
+  if (e.key in map) {
+    const val = map[e.key];
+    if (!(val in d.scores) && val !== 'NE') return;
+    e.preventDefault();
+    // Apply score
+    if (!state[d.id]) state[d.id] = { score: null, specifiers: {} };
+    state[d.id].score = val;
+    clearTentative(d.id);
+    saveState();
+    // Re-render row in place (lightweight)
+    const row = document.getElementById('row_' + d.id);
+    if (row) {
+      row.outerHTML = renderDimRow(d);
+      document.getElementById('row_' + d.id).classList.add('kbd-focus');
+    }
+    updateProgress();
+    // Auto-advance
+    const nxt = findNextUnscored(kbdFocusIdx);
+    if (nxt >= 0) setKbdFocus(nxt);
+  }
+});
+function setTestScore(testId, val, btn) {
+  if (!state[testId]) state[testId] = { score: null, specifiers: {} };
+  state[testId].score = val;
+  btn.parentElement.querySelectorAll('.s-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  const dimRow = btn.closest('.dim-row');
+  if (dimRow) {
+    const dimId = dimRow.id.replace('row_','');
+    const d = DIMS.find(x => x.id === dimId);
+    if (d && isDimScored(d)) dimRow.classList.add('scored');
+  }
+  saveState();
+  updateProgress();
+}
+function setAxisScore(axId, val, btn, ai) {
+  if (!state[axId]) state[axId] = { score: null };
+  state[axId].score = val;
+  btn.parentElement.querySelectorAll('.s-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  const dimRow = btn.closest('.dim-row');
+  if (dimRow) {
+    const dimId = dimRow.id.replace('row_','');
+    const d = DIMS.find(x => x.id === dimId);
+    if (d && isDimScored(d)) dimRow.classList.add('scored');
+  }
+  saveState();
+  updateProgress();
+}
+
+function updateProgress() {
+  let scored = 0, tentCount = 0;
+  const total = DIMS.length;
+  // Tentatives DO count toward scored (Option α: clinician asserts normal by sweep).
+  // But we surface them in a separate badge so the clinician knows what's auto-asserted.
+  DIMS.forEach(d => {
+    if (isDimScored(d)) { scored++; if (isTentative(d.id)) tentCount++; }
+  });
+  const allComplete = scored === total && tentCount === 0;
+  const txt = tentCount > 0 ? `${scored} / ${total} · ${tentCount} tent.` : `${scored} / ${total}`;
+  document.getElementById('progressText').textContent = txt;
+  document.getElementById('progressFill').style.width = `${(scored/total)*100}%`;
+  // Section counts in headers + complete state for collapse toggle
+  document.querySelectorAll('.section-head').forEach(h => {
+    const secName = h.querySelector('span:first-child').textContent;
+    let items = 0, sc = 0;
+    DIMS.forEach(d => {
+      const s = SECTION_MAP[d.id] || d.code;
+      if (s === secName) { items++; if (isDimScored(d)) sc++; }
+    });
+    const cEl = h.querySelector('.count');
+    if (cEl) cEl.textContent = `${sc}/${items}`;
+    const isComplete = sc === items && items > 0;
+    h.classList.toggle('sec-complete', isComplete);
+  });
+  // Section-nav chips (C5)
+  document.querySelectorAll('.section-nav .nav-chip').forEach(chip => {
+    const secName = chip.getAttribute('data-sec');
+    let items = 0, sc = 0;
+    DIMS.forEach(d => {
+      const s = SECTION_MAP[d.id] || d.code;
+      if (s === secName) { items++; if (isDimScored(d)) sc++; }
+    });
+    const cntEl = chip.querySelector('.nav-count');
+    if (cntEl) cntEl.textContent = `${sc}/${items}`;
+    chip.classList.toggle('complete', sc === items && items > 0);
+  });
+  // Sweep button label updates
+  const sweepBtn = document.getElementById('sweepBtn');
+  if (sweepBtn) {
+    let unscored = 0;
+    DIMS.forEach(d => {
+      if (d.type === 'multitest' || d.type === 'two_axis') return;
+      if (!('0' in (d.scores || {}))) return;
+      const cur = state[d.id]?.score;
+      if (cur === null || cur === undefined) unscored++;
+    });
+    if (tentCount > 0) {
+      sweepBtn.textContent = `Confirmar ${tentCount} tent.`;
+      sweepBtn.title = 'Confirma todas las dimensiones marcadas como tentativas (cambia borde punteado a sólido). Cuenta como 1 click.';
+      sweepBtn.onclick = confirmAllTentative;
+      sweepBtn.disabled = false;
+    } else if (unscored > 0) {
+      sweepBtn.textContent = `Marcar ${unscored} normales`;
+      sweepBtn.title = 'Marca todas las dimensiones bipolares no puntuadas como 0 (normal) en estado tentativo. Cambia a confirmadas con un click.';
+      sweepBtn.onclick = sweepDefaults;
+      sweepBtn.disabled = false;
+    } else {
+      sweepBtn.textContent = 'Todo puntuado';
+      sweepBtn.disabled = true;
+    }
+  }
+  // Update collapse-all button visibility
+  updateCollapseAllBtn();
+  // Sync mobile action bar (no-op en desktop por CSS)
+  if (typeof syncMobileBar === 'function') syncMobileBar();
+  // Completion CTA: show "Ver perfil" badge when all dims scored with no tentatives
+  let ctaEl = document.getElementById('completionCta');
+  if (allComplete) {
+    if (!ctaEl) {
+      ctaEl = document.createElement('button');
+      ctaEl.id = 'completionCta';
+      ctaEl.className = 'completion-cta';
+      ctaEl.onclick = () => showView('profile');
+      document.getElementById('progressText').insertAdjacentElement('afterend', ctaEl);
+    }
+    ctaEl.textContent = 'Ver perfil →';
+    ctaEl.style.display = '';
+  } else if (ctaEl) {
+    ctaEl.style.display = 'none';
+  }
+}
+
+// Confirm all tentative in one click (Option β — companion to sweep)
+function confirmAllTentative() {
+  Object.keys(tentative).forEach(id => clearTentative(id));
+  renderScoreView();
+}
+
+// Section collapse/expand toggle (C7)
+function toggleSection(gridId, btn) {
+  const grid = document.getElementById(gridId);
+  if (!grid) return;
+  const isCollapsed = grid.classList.toggle('collapsed');
+  if (btn) btn.innerHTML = isCollapsed ? '&#9660; Expandir' : '&#9650; Colapsar';
+  updateCollapseAllBtn();
+}
+
+// Collapse all complete sections in one click (C8)
+function collapseCompleteSections() {
+  document.querySelectorAll('.section-head.sec-complete').forEach(h => {
+    const gridId = h.getAttribute('data-grid');
+    const grid = document.getElementById(gridId);
+    if (grid && !grid.classList.contains('collapsed')) {
+      grid.classList.add('collapsed');
+      const btn = h.querySelector('.sec-collapse');
+      if (btn) btn.innerHTML = '&#9660; Expandir';
+    }
+  });
+  updateCollapseAllBtn();
+}
+
+// Show/hide "Colapsar completas" button based on whether any complete sections exist
+function updateCollapseAllBtn() {
+  const btn = document.getElementById('collapseAllBtn');
+  if (!btn) return;
+  const hasComplete = document.querySelector('.section-head.sec-complete') !== null;
+  btn.style.display = hasComplete ? '' : 'none';
+  // Show "Expandir todas" only when there's at least one collapsed section
+  const expandBtn = document.getElementById('expandAllBtn');
+  if (expandBtn) {
+    const hasCollapsed = document.querySelector('.section-grid.collapsed') !== null;
+    expandBtn.style.display = hasCollapsed ? '' : 'none';
+  }
+}
+
+// Expand all collapsed sections (counterpart to collapseCompleteSections)
+function expandAllSections() {
+  document.querySelectorAll('.section-grid.collapsed').forEach(grid => {
+    grid.classList.remove('collapsed');
+    const headId = grid.id.replace(/^grid_/, '');
+    const head = document.getElementById(headId);
+    if (head) {
+      const btn = head.querySelector('.sec-collapse');
+      if (btn) btn.innerHTML = '&#9650; Colapsar';
+    }
+  });
+  updateCollapseAllBtn();
+}
+
+// New registro: limpia state y empieza fresh (confirmación obligatoria)
+function newRegistro() {
+  if (!confirm('¿Limpiar toda la evaluación actual y empezar un nuevo registro?\n\nSe perderán los scores no exportados.')) return;
+  localStorage.removeItem('bmse_state_v2');
+  state = defaultState();
+  if (typeof tentative === 'object' && tentative) {
+    Object.keys(tentative).forEach(k => delete tentative[k]);
+  }
+  renderScoreView();
+  showView('score');
+  if (typeof syncMobileBar === 'function') syncMobileBar();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── VIEW TOGGLE ──
+function showView(view) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+  const sv = document.getElementById('scoreView');
+  const pv = document.getElementById('profileView');
+  if (view === 'profile') {
+    renderProfile();
+    sv.style.display = 'none';
+    pv.style.display = '';
+    pv.style.opacity = '0';
+    pv.style.transform = 'translateY(6px)';
+    requestAnimationFrame(() => {
+      pv.style.transition = 'opacity 0.22s ease, transform 0.22s ease';
+      pv.style.opacity = '1';
+      pv.style.transform = 'translateY(0)';
+    });
+  } else {
+    pv.style.display = 'none';
+    sv.style.display = '';
+    sv.style.opacity = '0';
+    sv.style.transform = 'translateY(4px)';
+    requestAnimationFrame(() => {
+      sv.style.transition = 'opacity 0.18s ease, transform 0.18s ease';
+      sv.style.opacity = '1';
+      sv.style.transform = 'translateY(0)';
+    });
+  }
+}
+
+function renderProfile() {
+  const c = document.getElementById('profileView');
+  // Build score summary by section
+  const grouped = {};
+  const order = [];
+  DIMS.forEach(d => {
+    const sec = SECTION_MAP[d.id] || d.code;
+    if (!grouped[sec]) { grouped[sec] = []; order.push(sec); }
+    grouped[sec].push(d);
+  });
+  let cards = '';
+  order.forEach(sec => {
+    grouped[sec].forEach(d => {
+      if (d.type === 'multitest') {
+        d.tests.forEach(t => {
+          const sc = state[t.id]?.score;
+          cards += summaryCard(t.label, sc);
+        });
+      } else if (d.type === 'two_axis') {
+        d.axes.forEach(a => {
+          const sc = state[a.id]?.score;
+          cards += summaryCard(`${d.title} · ${a.label}`, sc);
+        });
+      } else {
+        const sc = state[d.id]?.score;
+        cards += summaryCard(d.title, sc);
+      }
+    });
+  });
+
+  // Capa 2 outcomes (3ST · BVC · PSP · capacidad)
+  let outcomesHtml = '';
+  try {
+    const outcomes = [outcomeSuicidio(), outcomeAgresividad(), outcomeNegligencia(), outcomeCapacidad()];
+    outcomes.forEach(o => { outcomesHtml += renderOutcomeCard(o); });
+  } catch (e) {
+    outcomesHtml = `<div style="color:var(--red);font-size:12px">Error renderizando outcomes: ${e.message}</div>`;
+  }
+
+  // HiTOP per-feeder grid
+  let hitopHtml = '';
+  try { hitopHtml = renderHiTOPGrid(); }
+  catch (e) { hitopHtml = `<div style="color:var(--red);font-size:12px">Error renderizando HiTOP: ${e.message}</div>`; }
+
+  // MSE narrative report (texto plano para copy-paste)
+  let mseReport = '';
+  try {
+    if (typeof generateMSEReport === 'function') mseReport = generateMSEReport();
+  } catch (e) { mseReport = '(error generando reporte: ' + e.message + ')'; }
+  const mseEscaped = mseReport.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  c.innerHTML = `
+    <details class="profile-block profile-block-collapsible">
+      <summary>
+        <h2>Reporte clínico (copy-paste)</h2>
+        <span class="collapse-hint">▾</span>
+      </summary>
+      <div class="h-sub">Narrativa fluida generada desde las dimensiones puntuadas. Omite no evaluadas. Pega directo en historia clínica / EMR.</div>
+      <div class="mse-report-wrap">
+        <button class="mse-copy-btn" onclick="copyMSEReport(this)">Copiar reporte</button>
+        <textarea class="mse-report-text" id="mseReportText" readonly>${mseEscaped || '(Sin dimensiones puntuadas todavía. Vuelve a "Puntuar" y luego regresa aquí.)'}</textarea>
+      </div>
+    </details>
+    <div class="profile-block">
+      <h2>Outcomes · Capa 2</h2>
+      <div class="h-sub">3ST/Klonsky (suicidio) · BVC/Brøset (agresividad) · Diogenes pattern (negligencia) · Appelbaum-Grisso (capacidad). No es score: configuración + traza. Large 2017 (PPV 0.4%) y Fazel 2012 (PPV 41%) — los tools tienen sensibilidad pobre como predictores aislados.</div>
+      <div class="outcomes-grid">${outcomesHtml}</div>
+    </div>
+    <div class="profile-block">
+      <h2>Perfil bMSE</h2>
+      <div class="h-sub">Radar bipolar de las 21 dimensiones clínicas bMSE agrupadas por dominio (Psicomotricidad, Atención, Hedónico, Pensamiento, Valencia Negativa, Mentalización, Global). Visualización del estado dimensional en un solo gráfico.</div>
+      <div id="radarBMSE" class="radar-container"></div>
+    </div>
+    <div class="profile-block">
+      <h2>Perfil RDoC</h2>
+      <div class="h-sub">Mapeo bMSE → 27 constructos RDoC (NIMH) en 6 dominios. Lectura dimensional: cada constructo agrega feeders bMSE con dirección patológica explícita.</div>
+      <div id="radarRDoC" class="radar-container"></div>
+    </div>
+    <div class="profile-block">
+      <h2>Perfil HiTOP / Forbes</h2>
+      <div class="h-sub">Vista per-feeder, sin agregación. Cada subfactor muestra el valor crudo y nivel cualitativo de sus feeders. Invariante 4: configuraciones, no sumas/máximos.</div>
+      <div class="hitop-legend">
+        <span><span class="lg-dot" style="background:#a8a29e"></span>sin señal</span>
+        <span><span class="lg-dot" style="background:var(--orange)"></span>señal (|1|)</span>
+        <span><span class="lg-dot" style="background:var(--red);box-shadow:0 0 0 3px rgba(181,38,26,0.2)"></span>señal extrema (|2| · F4≥4)</span>
+        <span><span class="lg-dot" style="background:#e7e5e4"></span>no evaluado</span>
+      </div>
+      ${hitopHtml}
+    </div>
+  `;
+  // Wire radares SVG (renderizan dentro de sus div containers tras inyectar el HTML)
+  try { if (typeof renderRadarBMSE === 'function') renderRadarBMSE(); }
+  catch (e) { console.warn('bMSE radial:', e.message); }
+  try { if (typeof renderRadarRDoC === 'function') renderRadarRDoC(); }
+  catch (e) { console.warn('RDoC radial:', e.message); }
+}
+
+function copyMSEReport(btn) {
+  const ta = document.getElementById('mseReportText');
+  if (!ta) return;
+  ta.select();
+  try {
+    document.execCommand('copy');
+    const orig = btn.textContent;
+    btn.textContent = '✓ Copiado';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1800);
+  } catch (e) {
+    btn.textContent = '✗ Error';
+    setTimeout(() => { btn.textContent = 'Copiar reporte'; }, 1800);
+  }
+}
+
+function renderOutcomeCard(o) {
+  const statusLabel = o.statusLabel || (o.status === 'red' ? 'Activo' : o.status === 'yellow' ? 'Vigilar' : 'Sin señal');
+  const signalsHtml = (o.signals || []).map(s => `<div class="sig">${s}</div>`).join('');
+  return `<div class="outcome-card status-${o.status}">
+    <div class="outcome-head">
+      <span class="o-title">${o.title}</span>
+      <span class="o-badge">${statusLabel}</span>
+    </div>
+    <div class="o-summary">${o.summary}</div>
+    ${signalsHtml ? `<div class="o-signals">${signalsHtml}</div>` : ''}
+  </div>`;
+}
+
+function renderHiTOPGrid() {
+  if (typeof HITOP_MAP === 'undefined' || typeof HITOP_GROUPS === 'undefined') {
+    return '<div style="color:var(--text-muted);font-size:12px">HiTOP data no disponible.</div>';
+  }
+  const labels = Object.keys(HITOP_MAP);
+  const ROW2_ORDER = ['Externalizing', 'Mania / Detachment', 'Thought Disorder', 'Sleep / Regulatory'];
+  const row1 = HITOP_GROUPS.filter(g => !ROW2_ORDER.includes(g.name));
+  const row2 = ROW2_ORDER.map(name => HITOP_GROUPS.find(g => g.name === name)).filter(Boolean);
+  const rowGroups = [row1, row2];
+  let html = '';
+  rowGroups.forEach((rowGs, ri) => {
+    html += `<div class="hitop-row">`;
+    rowGs.forEach(g => {
+      const nSubs = g.to - g.from + 1;
+      html += `<div class="hitop-group" style="flex:${nSubs}">`;
+      html += `<div class="hitop-group-head" style="color:${g.color};background:${g.color}11;border-bottom-color:${g.color}">${g.name.toUpperCase()}</div>`;
+      html += `<div class="hitop-subs">`;
+      for (let i = g.from; i <= g.to; i++) {
+        const subName = labels[i].replace(/\n/g, ' ');
+        const feeders = HITOP_MAP[labels[i]];
+        const feederData = feeders.map(getFeederSignal);
+        const evaluated = feederData.filter(f => f.evaluated);
+        const anyExtreme = evaluated.some(f => f.extreme);
+        const anySignal = evaluated.some(f => f.signal);
+        let subCls = '';
+        if (anyExtreme) subCls = 'extreme';
+        else if (anySignal) subCls = 'signal';
+        html += `<div class="hitop-sub ${subCls}">`;
+        html += `<div class="hitop-sub-head"><span class="sub-dot"></span><span class="sub-name">${subName}</span></div>`;
+        html += `<div class="hitop-feeders">`;
+        feederData.forEach((fd, fi) => {
+          const d = feeders[fi];
+          const dimObj = DIMS.find(x => x.id === d.id);
+          const shortName = d.id.split('.').pop();
+          let valTxt = '—', feederCls = '';
+          if (!fd.evaluated) {
+            valTxt = fd.ne ? 'NE' : '—';
+            feederCls = 'ne';
+          } else {
+            valTxt = d.id === 'F4.contenido' ? String(fd.raw) : (fd.raw > 0 ? '+' : '') + fd.raw;
+            if (fd.extreme) feederCls = 'extreme';
+            else if (fd.signal) feederCls = 'signal';
+          }
+          const nivel = fd.evaluated ? (dimObj?.details?.[valTxt]?.nivel || dimObj?.scores?.[valTxt] || '') : '';
+          const tip = fd.evaluated ? `${d.id} ${valTxt} — ${nivel}` : fd.ne ? `${d.id}: no evaluable` : `${d.id}: no puntuado`;
+          html += `<span class="hitop-feeder ${feederCls}" title="${escapeAttr(tip)}">${valTxt}`;
+          if (nivel && nivel !== '—') html += `<span class="feeder-nivel">${shortLabel(nivel, 14)}</span>`;
+          html += `</span>`;
+        });
+        html += `</div></div>`;
+      }
+      html += `</div></div>`;
+    });
+    html += `</div>`;
+  });
+  return html;
+}
+
+function summaryCard(title, score) {
+  const v = fmtScore(score);
+  let cls = 'ne';
+  if (score !== null && score !== undefined && score !== 'NE') {
+    const n = parseInt(score, 10);
+    if (!Number.isNaN(n)) cls = n < 0 ? 'neg' : n > 0 ? 'pos' : '';
+  }
+  return `<div class="summary-card"><span class="sc-title">${title}</span><span class="sc-val ${cls}">${v}</span></div>`;
+}
+
+renderScoreView();
+
+// ── BRAIN INFERENCE HOOKS ──
+// Wrap saveState para que brainUpdate() corra tras cada score
+if (typeof brainUpdate === 'function') {
+  const _origSaveState = saveState;
+  saveState = function() {
+    _origSaveState();
+    try { brainUpdate(); } catch (e) { console.warn('brainUpdate:', e); }
+  };
+  // Wrap renderProfile para refresh del widget al entrar a Perfil
+  const _origRenderProfile = renderProfile;
+  renderProfile = function() {
+    _origRenderProfile();
+    setTimeout(() => { try { brainUpdate(); } catch (e) {} }, 30);
+  };
+  // Primer update al cargar (en caso de state previa)
+  try { brainUpdate(); } catch (e) {}
+}
+
+// ── MOBILE ACTION BAR LOGIC ──
+function mobileSweepAction() {
+  const sweepBtn = document.getElementById('sweepBtn');
+  if (sweepBtn && !sweepBtn.disabled) sweepBtn.click();
+}
+
+function mobileResetConfirm() {
+  if (confirm('¿Limpiar toda la evaluación y comenzar de nuevo?')) {
+    localStorage.removeItem('bmse_state_v2');
+    state = defaultState();
+    Object.keys(tentative).forEach(k => delete tentative[k]);
+    renderScoreView();
+    showView('score');
+    syncMobileBar();
+  }
+}
+
+// syncMobileBar: replica estado del sweepBtn nativo al bar mobile.
+// Se llama desde updateProgress() después de cada cambio de score.
+function syncMobileBar() {
+  const sweepBtn = document.getElementById('sweepBtn');
+  const mobSweep = document.getElementById('mobSweepBtn');
+  const mobProfile = document.getElementById('mobProfileBtn');
+  if (!mobSweep) return;
+  if (sweepBtn) {
+    mobSweep.textContent = sweepBtn.textContent || 'Marcar normales';
+    mobSweep.disabled = sweepBtn.disabled;
+    mobSweep.style.opacity = sweepBtn.disabled ? '0.5' : '1';
+    const allDone = sweepBtn.disabled && sweepBtn.textContent === 'Todo puntuado';
+    if (mobProfile) {
+      mobProfile.style.background = allDone ? 'var(--teal)' : '';
+      mobProfile.style.color = allDone ? '#fff' : '';
+      mobProfile.style.border = allDone ? 'none' : '';
+    }
+  }
+}
+
+// syncMobileBar ya se llama desde updateProgress().
+// Sync inicial en caso de que updateProgress haya corrido antes de que el bar exista.
+setTimeout(syncMobileBar, 150);
+</script>
+</body>
+</html>
